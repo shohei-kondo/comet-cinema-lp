@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>仕事は金。そう思ってた俺が、子どもの一言で立ち止まった日</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Noto Serif JP', serif; 
+      background: #000;
+      overflow: hidden;
+    }
+    
+    .story-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      max-height: 800px;
+      background: #000;
+      overflow: hidden;
+    }
+    
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .scene.active {
+      opacity: 1;
+      z-index: 10;
+    }
+    
+    .scene-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.7);
+      animation: slowZoom 12s ease-in-out forwards;
+    }
+    
+    @keyframes slowZoom {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.1);
+      }
+    }
+    
+    .scene-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    .scene-text {
+      font-size: clamp(18px, 3vw, 32px);
+      color: #fff;
+      line-height: 2;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.8);
+      font-weight: 400;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease-out forwards;
+      animation-delay: 0.5s;
+    }
+    
+    .scene-text.line2 {
+      animation-delay: 1.5s;
+      margin-top: 30px;
+      font-size: clamp(16px, 2.5vw, 26px);
+      color: #f5e6c8;
+    }
+    
+    .scene-text.line3 {
+      animation-delay: 2.5s;
+      margin-top: 20px;
+      font-size: clamp(14px, 2vw, 22px);
+      color: #e8c97a;
+    }
+    
+    .scene-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(20px, 3.5vw, 36px);
+      color: #C9A84C;
+      margin-top: 40px;
+      opacity: 0;
+      transform: scale(0.95);
+      animation: fadeInScale 1s ease-out forwards;
+      animation-delay: 3s;
+      text-shadow: 0 2px 30px rgba(201,168,76,0.6);
+    }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInScale {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    .vignette {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 150px rgba(0,0,0,0.8);
+      pointer-events: none;
+      z-index: 3;
+    }
+    
+    .film-grain {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=');
+      opacity: 0.15;
+      animation: grainMove 0.5s steps(1) infinite;
+      pointer-events: none;
+      z-index: 4;
+    }
+    
+    @keyframes grainMove {
+      0%, 100% { transform: translate(0, 0); }
+      10% { transform: translate(-5%, -5%); }
+      20% { transform: translate(-10%, 5%); }
+      30% { transform: translate(5%, -10%); }
+      40% { transform: translate(-5%, 15%); }
+      50% { transform: translate(-10%, 5%); }
+      60% { transform: translate(15%, 0); }
+      70% { transform: translate(0, 10%); }
+      80% { transform: translate(-15%, 0); }
+      90% { transform: translate(10%, 5%); }
+    }
+    
+    .letterbox {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 8%;
+      background: #000;
+      z-index: 5;
+      pointer-events: none;
+    }
+    
+    .letterbox.top {
+      top: 0;
+    }
+    
+    .letterbox.bottom {
+      bottom: 0;
+    }
+    
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, #C9A84C, #E8C97A);
+      z-index: 100;
+      transition: width 0.3s ease;
+    }
+    
+    .controls {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .control-btn {
+      background: rgba(201,168,76,0.2);
+      border: 1px solid rgba(201,168,76,0.5);
+      color: #C9A84C;
+      padding: 12px 24px;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.1em;
+    }
+    
+    .control-btn:hover {
+      background: rgba(201,168,76,0.4);
+      transform: translateY(-2px);
+    }
+    
+    .control-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .play-pause-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.3);
+      border: 2px solid #C9A84C;
+      color: #C9A84C;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+    
+    .play-pause-btn:hover {
+      background: rgba(201,168,76,0.5);
+      transform: scale(1.1);
+    }
+    
+    .scene-number {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: rgba(201,168,76,0.6);
+      letter-spacing: 0.2em;
+      z-index: 50;
+    }
+    
+    .overlay-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%);
+      z-index: 1;
+      animation: fadeInGradient 1.5s ease-out forwards;
+    }
+    
+    @keyframes fadeInGradient {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    .title-scene {
+      background: linear-gradient(135deg, #1A0508 0%, #2C0A12 100%);
+    }
+    
+    .title-text {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 700;
+      color: #C9A84C;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1.5s ease-out forwards;
+      text-shadow: 0 0 40px rgba(201,168,76,0.4);
+    }
+    
+    .subtitle-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(14px, 2vw, 20px);
+      color: #f5e6c8;
+      margin-top: 30px;
+      opacity: 0;
+      animation: fadeInUp 1.5s ease-out forwards;
+      animation-delay: 1s;
+      letter-spacing: 0.15em;
+    }
+    
+    .cta-overlay {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out forwards;
+      animation-delay: 2s;
+      z-index: 50;
+    }
+    
+    .cta-text {
+      font-size: clamp(16px, 2vw, 24px);
+      color: #fff;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+    
+    .cta-btn {
+      display: inline-block;
+      padding: 16px 40px;
+      background: #C9A84C;
+      color: #2C0A12;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+    }
+    
+    .cta-btn:hover {
+      background: #E8C97A;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(201,168,76,0.6);
+    }
+    
+    @media (max-width: 768px) {
+      .scene-content {
+        padding: 20px;
+      }
+      .controls {
+        bottom: 20px;
+        gap: 10px;
+      }
+      .control-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="story-container">
+    <!-- Letterbox bars for cinematic effect -->
+    <div class="letterbox top"></div>
+    <div class="letterbox bottom"></div>
+    
+    <!-- Film grain overlay -->
+    <div class="film-grain"></div>
+    
+    <!-- Vignette effect -->
+    <div class="vignette"></div>
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Scene Number -->
+    <div class="scene-number" id="sceneNumber">Scene 1 / 5</div>
+    
+    <!-- Scene 0: Title -->
+    <div class="scene active title-scene" data-scene="0">
+      <div class="scene-content">
+        <div class="title-text">
+          仕事は金。そう思ってた俺が、<br>
+          子どもの一言で立ち止まった日
+        </div>
+        <div class="subtitle-text">
+          〜 ファミリーデー 〜
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scene 1: Before -->
+    <div class="scene" data-scene="1">
+      <div class="scene-bg" style="background-image: url('images/story-family-1.jpg');"></div>
+      <div class="overlay-gradient"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div class="scene-text">
+          俺は50代半ば。工場の責任者をやっている。
+        </div>
+        <div class="scene-text line2">
+          仕事は「金を稼ぐ場所」だと割り切ってきた。<br>
+          やりがいとか誇りとか、そういうのは二の次。
+        </div>
+        <div class="scene-text line3">
+          だから「ファミリーデー」の案内が届いたとき、<br>
+          正直「また綺麗ごとか」と思った。
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scene 2: During Event -->
+    <div class="scene" data-scene="2">
+      <div class="scene-bg" style="background-image: url('images/story-family-2.jpg');"></div>
+      <div class="overlay-gradient"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div class="scene-text">
+          当日、工場に家族が集まった。
+        </div>
+        <div class="scene-text line2">
+          部下の一人が、5歳くらいの息子に<br>
+          工場のラインを説明している。
+        </div>
+        <div class="scene-text line3">
+          その子の顔が、どんどん明るくなっていく。
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scene 3: Team Collaboration -->
+    <div class="scene" data-scene="3">
+      <div class="scene-bg" style="background-image: url('images/story-family-2.jpg'); background-position: 60% center;"></div>
+      <div class="overlay-gradient"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div class="scene-text">
+          そして、その子がこう言った。
+        </div>
+        <div class="scene-text line2">
+          「工場の人って、すごいんだね。<br>
+          パパの会社、かっこいい。」
+        </div>
+        <div class="scene-text line3">
+          その瞬間、何かが、止まった。
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scene 4: After - Realization -->
+    <div class="scene" data-scene="4">
+      <div class="scene-bg" style="background-image: url('images/story-family-3.jpg');"></div>
+      <div class="overlay-gradient"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div class="scene-text">
+          俺たちが毎日「当たり前」にやっていること。
+        </div>
+        <div class="scene-text line2">
+          それが、誰かの誇りになっていた。<br>
+          誰かの生活を支えていた。
+        </div>
+        <div class="scene-quote">
+          「綺麗ごとでもいい。<br>
+          現場に落とせる形にするなら、俺がやる」
+        </div>
+        <div class="scene-text line3" style="animation-delay: 4s; margin-top: 30px;">
+          そう思った。
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scene 5: CTA -->
+    <div class="scene" data-scene="5">
+      <div class="scene-bg" style="background: linear-gradient(135deg, #1A0508 0%, #2C0A12 50%, #1A0508 100%);"></div>
+      <div class="overlay-gradient"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div class="title-text" style="animation-delay: 0s;">
+          あなたのチームにも、<br>
+          この変化を。
+        </div>
+        <div class="subtitle-text" style="animation-delay: 1s;">
+          たった45分で、組織が変わり始める。
+        </div>
+      </div>
+      <div class="cta-overlay">
+        <div class="cta-text">まずは、お気軽にご相談ください。</div>
+        <a href="#cta" class="cta-btn">無料相談をする</a>
+      </div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="controls">
+      <button class="control-btn" id="prevBtn" disabled>◀ 前へ</button>
+      <button class="play-pause-btn" id="playPauseBtn">▶</button>
+      <button class="control-btn" id="nextBtn">次へ ▶</button>
+    </div>
+  </div>
+
+  <script>
+    let currentScene = 0;
+    const totalScenes = 6;
+    let isPlaying = false;
+    let autoPlayInterval = null;
+    const sceneData = [
+      { duration: 4000 },  // Title
+      { duration: 8000 },  // Scene 1
+      { duration: 8000 },  // Scene 2
+      { duration: 9000 },  // Scene 3
+      { duration: 10000 }, // Scene 4
+      { duration: 12000 }  // CTA
+    ];
+
+    const scenes = document.querySelectorAll('.scene');
+    const progressBar = document.getElementById('progressBar');
+    const sceneNumber = document.getElementById('sceneNumber');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+
+    function showScene(index) {
+      scenes.forEach((scene, i) => {
+        scene.classList.remove('active');
+        if (i === index) {
+          scene.classList.add('active');
+        }
+      });
+      
+      currentScene = index;
+      updateUI();
+    }
+
+    function updateUI() {
+      // Update progress bar
+      const progress = (currentScene / (totalScenes - 1)) * 100;
+      progressBar.style.width = progress + '%';
+      
+      // Update scene number
+      sceneNumber.textContent = `Scene ${currentScene + 1} / ${totalScenes}`;
+      
+      // Update buttons
+      prevBtn.disabled = currentScene === 0;
+      nextBtn.disabled = currentScene === totalScenes - 1;
+    }
+
+    function nextScene() {
+      if (currentScene < totalScenes - 1) {
+        showScene(currentScene + 1);
+      } else {
+        stopAutoPlay();
+      }
+    }
+
+    function prevScene() {
+      if (currentScene > 0) {
+        showScene(currentScene - 1);
+      }
+    }
+
+    function startAutoPlay() {
+      if (isPlaying) return;
+      
+      isPlaying = true;
+      playPauseBtn.innerHTML = '⏸';
+      
+      function playNext() {
+        if (currentScene < totalScenes - 1) {
+          nextScene();
+          autoPlayInterval = setTimeout(playNext, sceneData[currentScene].duration);
+        } else {
+          stopAutoPlay();
+        }
+      }
+      
+      autoPlayInterval = setTimeout(playNext, sceneData[currentScene].duration);
+    }
+
+    function stopAutoPlay() {
+      isPlaying = false;
+      playPauseBtn.innerHTML = '▶';
+      if (autoPlayInterval) {
+        clearTimeout(autoPlayInterval);
+        autoPlayInterval = null;
+      }
+    }
+
+    function togglePlayPause() {
+      if (isPlaying) {
+        stopAutoPlay();
+      } else {
+        startAutoPlay();
+      }
+    }
+
+    // Event listeners
+    prevBtn.addEventListener('click', () => {
+      stopAutoPlay();
+      prevScene();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      stopAutoPlay();
+      nextScene();
+    });
+
+    playPauseBtn.addEventListener('click', togglePlayPause);
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        stopAutoPlay();
+        nextScene();
+      } else if (e.key === 'ArrowLeft') {
+        stopAutoPlay();
+        prevScene();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        togglePlayPause();
+      }
+    });
+
+    // Initialize
+    updateUI();
+    
+    // Auto-start after 2 seconds
+    setTimeout(() => {
+      startAutoPlay();
+    }, 2000);
+  </script>
+</body>
+</html>

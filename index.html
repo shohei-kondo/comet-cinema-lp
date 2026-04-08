@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EVENT CINEMA | 株式会社COMET</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --burgundy-dark: #2C0A12;
+      --burgundy: #6B1A2A;
+      --burgundy-mid: #8B2535;
+      --burgundy-light: #A83848;
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-pale: #F5E6C8;
+      --cream: #FDF6E3;
+      --cream-dark: #EDD9A3;
+      --text-light: #F5E6C8;
+      --text-dim: #C4A882;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--burgundy-dark);
+      color: var(--text-light);
+      font-family: 'Noto Serif JP', 'Cormorant Garamond', Georgia, serif;
+      overflow-x: hidden;
+    }
+    .filmstrip { width: 100%; height: 40px; background: #111; display: flex; align-items: center; overflow: hidden; position: relative; }
+    .filmstrip-holes { display: flex; gap: 20px; padding: 0 10px; z-index: 1; }
+    .filmstrip-hole { width: 14px; height: 20px; background: var(--burgundy-dark); border-radius: 2px; flex-shrink: 0; }
+    .marquee-lights { display: flex; justify-content: center; gap: 12px; padding: 12px 0; background: var(--burgundy-dark); flex-wrap: wrap; }
+    .marquee-light { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); animation: blink 1.5s infinite; flex-shrink: 0; }
+    .marquee-light:nth-child(even) { animation-delay: 0.75s; }
+    .marquee-light:nth-child(3n) { animation-delay: 0.25s; }
+    @keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--gold), 0 0 12px var(--gold-light); } 50% { opacity: 0.3; box-shadow: none; } }
+    header { position: relative; background: radial-gradient(ellipse at top, #3D0F1A 0%, var(--burgundy-dark) 70%); text-align: center; padding: 0 20px 60px; overflow: hidden; }
+    header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 50%, rgba(201,168,76,0.04) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(201,168,76,0.04) 0%, transparent 50%); pointer-events: none; }
+    .curtain-left, .curtain-right { position: absolute; top: 0; width: 120px; height: 100%; pointer-events: none; z-index: 1; }
+    .curtain-left { left: 0; background: linear-gradient(to right, rgba(107,26,42,0.95) 0%, rgba(107,26,42,0.6) 60%, transparent 100%); }
+    .curtain-right { right: 0; background: linear-gradient(to left, rgba(107,26,42,0.95) 0%, rgba(107,26,42,0.6) 60%, transparent 100%); }
+    .header-inner { position: relative; z-index: 2; padding-top: 50px; }
+    .logo-wrap { display: inline-block; margin-bottom: 40px; }
+    .logo-wrap img { height: 52px; filter: brightness(0) invert(1) sepia(1) saturate(0.3) brightness(0.9); opacity: 0.7; }
+    .cinema-marquee-box { display: inline-block; border: 3px solid var(--gold); border-radius: 4px; padding: 30px 60px 24px; position: relative; background: rgba(0,0,0,0.3); box-shadow: 0 0 0 8px rgba(201,168,76,0.1), 0 0 0 10px var(--gold), 0 0 30px rgba(201,168,76,0.2), inset 0 0 40px rgba(0,0,0,0.5); margin-bottom: 30px; }
+    .cinema-marquee-box::before { content: '★'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--burgundy-dark); color: var(--gold); padding: 0 10px; font-size: 18px; }
+    .cinema-title-en { font-family: 'Playfair Display', serif; font-size: clamp(48px, 8vw, 100px); font-weight: 900; letter-spacing: 0.15em; color: var(--gold-light); text-shadow: 0 0 40px rgba(201,168,76,0.5), 2px 2px 4px rgba(0,0,0,0.8); line-height: 1; margin-bottom: 8px; }
+    .cinema-subtitle { font-family: 'Noto Serif JP', serif; font-size: clamp(11px, 1.8vw, 15px); color: var(--cream-dark); letter-spacing: 0.2em; line-height: 1.8; font-weight: 300; }
+    .hero-tagline { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 28px); font-style: italic; color: var(--gold-light); margin-top: 30px; letter-spacing: 0.05em; }
+    .hero-description { font-family: 'Noto Serif JP', serif; font-size: clamp(13px, 1.8vw, 16px); color: var(--text-dim); margin-top: 16px; line-height: 2; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .scroll-hint { margin-top: 50px; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-dim); font-size: 12px; letter-spacing: 0.2em; }
+    .scroll-arrow { width: 24px; height: 24px; border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold); transform: rotate(45deg); animation: bounce 1.5s infinite; }
+    @keyframes bounce { 0%, 100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
+    section { padding: 80px 20px; }
+    .section-label { font-family: 'Playfair Display', serif; font-size: 11px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; text-align: center; margin-bottom: 16px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); text-align: center; color: var(--gold-light); margin-bottom: 12px; line-height: 1.3; }
+    .section-subtitle { font-family: 'Noto Serif JP', serif; font-size: clamp(13px, 1.6vw, 15px); text-align: center; color: var(--text-dim); letter-spacing: 0.15em; margin-bottom: 60px; line-height: 2; }
+    .gold-divider { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 auto 50px; max-width: 400px; }
+    .gold-divider::before, .gold-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .gold-divider-diamond { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+    #now-showing { background: radial-gradient(ellipse at center, #1A0508 0%, var(--burgundy-dark) 80%); position: relative; }
+    #now-showing::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .posters-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1100px; margin: 0 auto; align-items: start; }
+    @media (max-width: 900px) { .posters-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; } }
+    @media (max-width: 580px) { .posters-grid { grid-template-columns: 1fr; max-width: 380px; } }
+    .poster-card { position: relative; cursor: pointer; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); transform-origin: center bottom; }
+    .poster-card:hover { transform: translateY(-12px) scale(1.03); }
+    .poster-frame { position: relative; border: 2px solid rgba(201,168,76,0.5); box-shadow: 0 0 0 1px rgba(201,168,76,0.15), 0 8px 30px rgba(0,0,0,0.7), 0 20px 60px rgba(0,0,0,0.4); overflow: hidden; border-radius: 2px; }
+    .poster-frame img { width: 100%; display: block; transition: transform 0.6s ease; }
+    .poster-card:hover .poster-frame img { transform: scale(1.05); }
+    .poster-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(20,4,10,0.75) 0%, rgba(20,4,10,0.1) 30%, rgba(20,4,10,0.1) 55%, rgba(10,2,5,0.85) 80%, rgba(5,0,2,0.97) 100%); pointer-events: none; }
+    .poster-top-credit { position: absolute; top: 16px; left: 0; right: 0; text-align: center; z-index: 3; pointer-events: none; }
+    .poster-presents { font-family: 'Playfair Display', serif; font-size: 10px; letter-spacing: 0.45em; color: var(--gold); text-transform: uppercase; display: block; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+    .poster-now-showing { display: inline-block; margin-top: 6px; border: 1px solid rgba(201,168,76,0.6); padding: 3px 12px; font-family: 'Playfair Display', serif; font-size: 8px; letter-spacing: 0.35em; color: rgba(201,168,76,0.8); text-transform: uppercase; }
+    .poster-title-block { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 18px 20px; z-index: 3; pointer-events: none; text-align: center; }
+    .poster-genre-tag { font-family: 'Playfair Display', serif; font-size: 9px; letter-spacing: 0.35em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .poster-main-title { font-family: 'Noto Serif JP', serif; font-size: clamp(11px, 1.3vw, 13px); font-weight: 700; color: #fff; line-height: 1.75; margin-bottom: 10px; text-shadow: 0 1px 6px rgba(0,0,0,0.9); letter-spacing: 0.05em; }
+    .poster-subtitle-tag { display: inline-block; border-top: 1px solid rgba(201,168,76,0.5); border-bottom: 1px solid rgba(201,168,76,0.5); padding: 4px 14px; font-family: 'Playfair Display', serif; font-size: 10px; font-style: italic; color: var(--gold-light); letter-spacing: 0.15em; margin-bottom: 12px; }
+    .poster-credits { font-family: 'Playfair Display', serif; font-size: 8px; letter-spacing: 0.2em; color: rgba(201,168,76,0.5); text-transform: uppercase; line-height: 1.6; }
+    .poster-badge { position: absolute; top: -12px; right: 16px; background: var(--gold); color: var(--burgundy-dark); font-family: 'Playfair Display', serif; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; padding: 4px 12px; text-transform: uppercase; z-index: 4; }
+    .poster-hover-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(201,168,76,0.9); color: var(--burgundy-dark); font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; padding: 12px 28px; text-transform: uppercase; opacity: 0; transition: all 0.35s ease; z-index: 5; pointer-events: none; white-space: nowrap; border: none; }
+    .poster-card:hover .poster-hover-btn { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .coming-soon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1100px; margin: 60px auto 0; }
+    @media (max-width: 700px) { .coming-soon-grid { grid-template-columns: 1fr; max-width: 400px; } }
+    .coming-soon-card { border: 1px dashed rgba(201,168,76,0.25); border-radius: 2px; aspect-ratio: 2/3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: rgba(0,0,0,0.2); }
+    .coming-soon-card .cs-label { font-family: 'Playfair Display', serif; font-size: 13px; letter-spacing: 0.3em; color: rgba(201,168,76,0.35); text-transform: uppercase; }
+    .coming-soon-card .cs-icon { font-size: 30px; opacity: 0.15; }
+    #message { background: linear-gradient(180deg, var(--burgundy-dark) 0%, var(--burgundy) 50%, var(--burgundy-dark) 100%); text-align: center; position: relative; overflow: hidden; }
+    #message::before { content: '"'; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-family: 'Playfair Display', serif; font-size: 300px; color: rgba(201,168,76,0.04); line-height: 1; pointer-events: none; }
+    .message-lead { font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 48px); font-style: italic; color: var(--gold-light); line-height: 1.5; max-width: 800px; margin: 0 auto 40px; }
+    .message-body { font-family: 'Noto Serif JP', serif; font-size: clamp(14px, 1.8vw, 17px); line-height: 2.5; color: var(--text-light); max-width: 700px; margin: 0 auto; text-align: left; }
+    .message-highlight { display: inline; background: linear-gradient(transparent 60%, rgba(201,168,76,0.3) 60%); padding: 0 2px; }
+    #why { background: var(--burgundy-dark); }
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1000px; margin: 0 auto; }
+    @media (max-width: 700px) { .why-grid { grid-template-columns: 1fr; } }
+    .why-card { text-align: center; padding: 40px 30px; border-top: 2px solid var(--gold); background: rgba(255,255,255,0.02); position: relative; }
+    .why-card::before { content: ''; position: absolute; top: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+    .why-number { font-family: 'Playfair Display', serif; font-size: 60px; font-weight: 900; color: rgba(201,168,76,0.15); line-height: 1; margin-bottom: 20px; display: block; }
+    .why-icon { font-size: 36px; margin-bottom: 20px; display: block; }
+    .why-title { font-family: 'Noto Serif JP', serif; font-size: 18px; font-weight: 700; color: var(--gold-light); margin-bottom: 16px; }
+    .why-text { font-family: 'Noto Serif JP', serif; font-size: 14px; color: var(--text-dim); line-height: 2; }
+    #voices { background: radial-gradient(ellipse at center, #1A0508 0%, var(--burgundy-dark) 80%); }
+    .voices-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1000px; margin: 0 auto; }
+    @media (max-width: 750px) { .voices-grid { grid-template-columns: 1fr; } }
+    .voice-card { border-left: 2px solid var(--gold); padding: 24px 24px 24px 28px; background: rgba(201,168,76,0.03); }
+    .voice-quote { font-family: 'Noto Serif JP', serif; font-size: 14px; color: var(--text-light); line-height: 2; font-style: italic; margin-bottom: 20px; }
+    .voice-quote::before { content: '❝'; color: var(--gold); margin-right: 6px; font-style: normal; }
+    .voice-attr { font-size: 12px; color: var(--text-dim); letter-spacing: 0.15em; }
+    #video { background: linear-gradient(180deg, var(--burgundy-dark) 0%, #1A0508 50%, var(--burgundy-dark) 100%); text-align: center; position: relative; overflow: hidden; }
+    #video::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 60%); pointer-events: none; }
+    .video-container { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+    .video-frame { position: relative; padding: 20px; background: linear-gradient(135deg, rgba(107,26,42,0.3) 0%, rgba(26,5,8,0.5) 100%); border: 2px solid var(--gold); border-radius: 4px; box-shadow: 0 0 0 1px rgba(201,168,76,0.2), 0 20px 60px rgba(0,0,0,0.7); }
+    .video-frame::before { content: '★ FEATURED PRESENTATION ★'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--burgundy-dark); color: var(--gold); padding: 4px 20px; font-family: 'Playfair Display', serif; font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; border: 1px solid var(--gold); }
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; border-radius: 2px; }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .video-caption { margin-top: 20px; font-family: 'Noto Serif JP', serif; font-size: 13px; color: var(--text-dim); line-height: 2; }
+    #problems { background: linear-gradient(180deg, var(--burgundy-dark) 0%, #1A0508 50%, var(--burgundy-dark) 100%); position: relative; overflow: hidden; }
+    #problems::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 30% 50%, rgba(107,26,42,0.3) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(107,26,42,0.3) 0%, transparent 50%); pointer-events: none; }
+    .problems-intro { text-align: center; max-width: 800px; margin: 0 auto 60px; }
+    .problems-lead { font-family: 'Playfair Display', serif; font-size: clamp(20px, 3vw, 32px); font-style: italic; color: var(--gold-light); line-height: 1.8; margin-bottom: 20px; }
+    .problems-sublead { font-family: 'Noto Serif JP', serif; font-size: clamp(14px, 1.8vw, 17px); color: var(--text-dim); line-height: 2.2; }
+    .problems-grid { display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
+    .problem-item { background: linear-gradient(135deg, rgba(107,26,42,0.2) 0%, rgba(26,5,8,0.4) 100%); border: 1px solid rgba(201,168,76,0.2); border-left: 3px solid var(--gold); padding: 30px 35px; display: flex; align-items: flex-start; gap: 20px; transition: all 0.4s ease; position: relative; overflow: hidden; }
+    .problem-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gold); box-shadow: 0 0 20px rgba(201,168,76,0.6); transition: width 0.4s ease; }
+    .problem-item:hover { border-color: rgba(201,168,76,0.5); background: linear-gradient(135deg, rgba(107,26,42,0.3) 0%, rgba(26,5,8,0.5) 100%); transform: translateX(8px); }
+    .problem-item:hover::before { width: 6px; }
+    .problem-check { flex-shrink: 0; width: 28px; height: 28px; border: 2px solid var(--gold); background: transparent; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--gold); transition: all 0.3s; }
+    .problem-item:hover .problem-check { background: var(--gold); color: var(--burgundy-dark); box-shadow: 0 0 20px rgba(201,168,76,0.5); }
+    .problem-content { flex: 1; }
+    .problem-title { font-family: 'Noto Serif JP', serif; font-size: clamp(16px, 2vw, 20px); font-weight: 600; color: var(--cream); line-height: 1.6; margin-bottom: 10px; }
+    .problem-data { font-family: 'Playfair Display', serif; font-size: clamp(13px, 1.6vw, 16px); color: var(--gold-light); font-style: italic; margin-bottom: 8px; }
+    .problem-desc { font-family: 'Noto Serif JP', serif; font-size: clamp(13px, 1.5vw, 15px); color: var(--text-dim); line-height: 1.9; }
+    .problems-transition { text-align: center; margin-top: 60px; padding-top: 60px; border-top: 1px solid rgba(201,168,76,0.2); }
+    .transition-text { font-family: 'Playfair Display', serif; font-size: clamp(18px, 2.8vw, 28px); font-style: italic; color: var(--gold-light); line-height: 1.8; margin-bottom: 20px; }
+    .transition-subtext { font-family: 'Noto Serif JP', serif; font-size: clamp(14px, 1.8vw, 17px); color: var(--text-light); line-height: 2; }
+    #cta { background: linear-gradient(180deg, var(--burgundy-dark) 0%, #1A0508 100%); text-align: center; position: relative; overflow: hidden; }
+    #cta::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(ellipse at center, rgba(201,168,76,0.08) 0%, transparent 70%); pointer-events: none; }
+    .ticket-box { display: inline-block; max-width: 680px; width: 100%; position: relative; z-index: 1; }
+    .ticket-main { background: linear-gradient(135deg, #3D0F1A 0%, #1A0508 100%); border: 2px solid var(--gold); border-bottom: none; padding: 60px 50px 50px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
+    .ticket-main::before { content: 'ADMIT ONE'; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-family: 'Playfair Display', serif; font-size: 10px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; }
+    .ticket-circles { display: flex; justify-content: space-between; position: relative; }
+    .ticket-circles::before { content: ''; position: absolute; left: -2px; right: -2px; top: 50%; transform: translateY(-50%); height: 2px; background: repeating-linear-gradient(90deg, var(--gold) 0px, var(--gold) 8px, transparent 8px, transparent 14px); }
+    .ticket-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--burgundy-dark); border: 2px solid var(--gold); position: relative; z-index: 1; flex-shrink: 0; }
+    .ticket-stub { background: var(--gold); padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; }
+    .ticket-stub-text { font-family: 'Playfair Display', serif; font-size: 13px; letter-spacing: 0.2em; color: var(--burgundy-dark); font-weight: 700; }
+    .cta-eyebrow { font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; margin-bottom: 24px; }
+    .cta-title { font-family: 'Noto Serif JP', serif; font-size: clamp(22px, 3.5vw, 36px); color: var(--cream); line-height: 1.6; margin-bottom: 20px; font-weight: 600; }
+    .cta-body { font-family: 'Noto Serif JP', serif; font-size: 14px; color: var(--text-dim); line-height: 2; margin-bottom: 40px; }
+    .cta-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 18px 48px; background: var(--gold); color: var(--burgundy-dark); font-family: 'Noto Serif JP', serif; font-size: 15px; font-weight: 700; letter-spacing: 0.1em; border: none; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 10px; padding: 18px 40px; background: transparent; color: var(--gold-light); font-family: 'Noto Serif JP', serif; font-size: 15px; letter-spacing: 0.1em; border: 1px solid var(--gold); cursor: pointer; text-decoration: none; transition: all 0.3s; }
+    .btn-secondary:hover { background: rgba(201,168,76,0.1); transform: translateY(-2px); }
+    footer { background: #0A0205; text-align: center; padding: 40px 20px; border-top: 1px solid rgba(201,168,76,0.15); }
+    footer img { height: 36px; filter: brightness(0) invert(1) sepia(1) saturate(0.3) brightness(0.7); opacity: 0.5; margin-bottom: 16px; }
+    footer p { font-size: 11px; color: rgba(245,230,200,0.3); letter-spacing: 0.2em; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s; padding: 20px; overflow-y: auto; }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-content { background: #000; border: 3px solid var(--gold); max-width: 1400px; width: 100%; position: relative; transform: translateY(30px) scale(0.97); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 30px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(201,168,76,0.3); }
+    .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+    .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(201,168,76,0.2); border: 1px solid rgba(201,168,76,0.6); color: var(--gold); font-size: 24px; cursor: pointer; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; z-index: 10; border-radius: 50%; }
+    .modal-close:hover { background: var(--gold); color: var(--burgundy-dark); transform: scale(1.1); }
+    .modal-video-frame { width: 100%; height: 80vh; max-height: 900px; border: none; display: block; background: #000; }
+    .scroll-top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; background: var(--gold); color: var(--burgundy-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; opacity: 0; transition: opacity 0.3s; z-index: 100; transform: rotate(-90deg); }
+    .scroll-top.visible { opacity: 1; }
+    .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .top-logo-bar { background: var(--burgundy-dark); padding: 20px; text-align: center; border-bottom: 1px solid rgba(201,168,76,0.2); }
+    .top-logo-bar img { height: 40px; filter: brightness(0) invert(1) sepia(1) saturate(0.3) brightness(1); opacity: 0.85; }
+  </style>
+</head>
+<body>
+<div class="top-logo-bar"><img src="images/logo.png" alt="株式会社COMET" /></div>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-top"></div></div>
+<div class="marquee-lights" id="marquee-top"></div>
+<header>
+  <div class="curtain-left"></div>
+  <div class="curtain-right"></div>
+  <div class="header-inner">
+    <div class="cinema-marquee-box">
+      <div class="cinema-title-en">EVENT CINEMA</div>
+      <div class="cinema-subtitle">〜 悩める経営者の皆さまに、今宵、希望が持てるストーリーを 〜</div>
+    </div>
+    <div class="hero-tagline">さあ、今夜はどの物語を選びますか？</div>
+    <div class="hero-description">あなたの会社にも、こんな変化が起きるかもしれない。<br>3つの実話をもとにした物語が、今夜の上映を待っています。</div>
+    <div class="scroll-hint"><span>SCROLL</span><div class="scroll-arrow"></div></div>
+  </div>
+</header>
+<div class="marquee-lights" id="marquee-mid"></div>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-mid"></div></div>
+<section id="problems">
+  <div class="section-label fade-in">The Reality</div>
+  <h2 class="section-title fade-in">こんなお悩み、ありませんか？</h2>
+  <div class="gold-divider fade-in"><div class="gold-divider-diamond"></div></div>
+  
+  <div class="problems-intro fade-in">
+    <p class="problems-lead">
+      多くの企業が「社内イベント」を実施しています。<br>
+      でも、その効果を実感できている企業は、わずか。
+    </p>
+    <p class="problems-sublead">
+      以下のデータは、全国500社の人事・経営層へのアンケート結果です。<br>
+      もし1つでも当てはまるなら、このページを最後まで読んでみてください。
+    </p>
+  </div>
+  
+  <div class="problems-grid">
+    <div class="problem-item fade-in">
+      <div class="problem-check">✓</div>
+      <div class="problem-content">
+        <div class="problem-title">社内イベントの「目的」が曖昧になっている</div>
+        <div class="problem-data">調査データ：実施企業の72%が該当</div>
+        <div class="problem-desc">「とりあえず毎年やっているから」「楽しい時間を作りたい」という理由だけで、明確な目的設定がないまま実施。結果、効果測定もできず、予算の正当性も説明できない。</div>
+      </div>
+    </div>
+    
+    <div class="problem-item fade-in" style="transition-delay:0.1s">
+      <div class="problem-check">✓</div>
+      <div class="problem-content">
+        <div class="problem-title">「盛り上がって終わり」で、翌週には元通り</div>
+        <div class="problem-data">調査データ：参加者の68%が「効果を感じない」</div>
+        <div class="problem-desc">イベント当日は楽しく盛り上がるが、終わった瞬間に日常に戻る。部署間の壁、コミュニケーション不足、エンゲージメントの低さ——何も変わらない。</div>
+      </div>
+    </div>
+    
+    <div class="problem-item fade-in" style="transition-delay:0.2s">
+      <div class="problem-check">✓</div>
+      <div class="problem-content">
+        <div class="problem-title">若手・Z世代が「意味を感じない」と離脱する</div>
+        <div class="problem-data">調査データ：20代の54%が「社内イベントに価値を感じない」</div>
+        <div class="problem-desc">「強制参加」「何をさせられるか分からない」「ただの飲み会」に抵抗感。参加しても心ここにあらず。むしろ、信頼関係構築の機会を逃している。</div>
+      </div>
+    </div>
+    
+    <div class="problem-item fade-in" style="transition-delay:0.3s">
+      <div class="problem-check">✓</div>
+      <div class="problem-content">
+        <div class="problem-title">投資対効果（ROI）が見えず、予算が削減される</div>
+        <div class="problem-data">調査データ：経営層の61%が「効果測定できていない」</div>
+        <div class="problem-desc">「楽しかった」という感想だけでは、経営判断の材料にならない。組織への影響、行動変容、業務改善——具体的な成果が見えないため、予算承認が難しくなる。</div>
+      </div>
+    </div>
+    
+    <div class="problem-item fade-in" style="transition-delay:0.4s">
+      <div class="problem-check">✓</div>
+      <div class="problem-content">
+        <div class="problem-title">「また飲み会か」と、マンネリ化・形骸化している</div>
+        <div class="problem-data">調査データ：実施企業の79%が「同じ内容の繰り返し」</div>
+        <div class="problem-desc">毎年同じ忘年会、懇親会、BBQ。企画する側も惰性で回している。参加者も義務感で参加。「社内イベント＝時間の無駄」という空気が組織に定着してしまう。</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="problems-transition fade-in">
+    <p class="transition-text">
+      でも、これらは「社内イベントが悪い」のではなく、<br>
+      「設計」が間違っているだけかもしれません。
+    </p>
+    <p class="transition-subtext">
+      実際に、<span style="color: var(--gold); font-weight: 600;">「ちゃんと設計された」イベント</span>を体験した人たちには、<br>
+      確かな変化が生まれています。
+    </p>
+  </div>
+</section>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-problems"></div></div>
+<section id="now-showing">
+  <div class="section-label fade-in">Now Showing</div>
+  <h2 class="section-title fade-in">本日の上映作品</h2>
+  <p class="section-subtitle fade-in">実話をもとに描いた3つの物語。<br>どれかひとつ、あなたのチームに重なるものはありますか？</p>
+  <div class="gold-divider fade-in"><div class="gold-divider-diamond"></div></div>
+  <div class="posters-grid">
+    <div class="poster-card fade-in" onclick="openModal('modal1')">
+      <div class="poster-badge">Now Showing</div>
+      <div class="poster-frame">
+        <img src="images/poster-mystery.jpg" alt="謎解きプラン" />
+        <div class="poster-overlay"></div>
+        <div class="poster-top-credit"><span class="poster-presents">COMET Presents</span><span class="poster-now-showing">Now Showing</span></div>
+        <div class="poster-title-block">
+          <span class="poster-genre-tag">Mystery · Drama</span>
+          <div class="poster-main-title">社内イベント否定派の僕が<br>「45分」でチームを<br>信じかけた話</div>
+          <span class="poster-subtitle-tag">謎解きプラン</span>
+          <div class="poster-credits">COMET × EVENT CINEMA ｜ 2025</div>
+        </div>
+        <div class="poster-hover-btn">▶ ストーリーを見る</div>
+      </div>
+    </div>
+    <div class="poster-card fade-in" onclick="openModal('modal2')" style="transition-delay:0.15s">
+      <div class="poster-badge">Now Showing</div>
+      <div class="poster-frame">
+        <img src="images/poster-family.jpg" alt="ファミリーデー" />
+        <div class="poster-overlay"></div>
+        <div class="poster-top-credit"><span class="poster-presents">COMET Presents</span><span class="poster-now-showing">Now Showing</span></div>
+        <div class="poster-title-block">
+          <span class="poster-genre-tag">Family · Human Drama</span>
+          <div class="poster-main-title">仕事は金。そう思ってた俺が、<br>子どもの一言で<br>立ち止まった日</div>
+          <span class="poster-subtitle-tag">ファミリーデー</span>
+          <div class="poster-credits">COMET × EVENT CINEMA ｜ 2025</div>
+        </div>
+        <div class="poster-hover-btn">▶ ストーリーを見る</div>
+      </div>
+    </div>
+    <div class="poster-card fade-in" onclick="openModal('modal3')" style="transition-delay:0.3s">
+      <div class="poster-badge">Now Showing</div>
+      <div class="poster-frame">
+        <img src="images/poster-praise.jpg" alt="褒めゲー" />
+        <div class="poster-overlay"></div>
+        <div class="poster-top-credit"><span class="poster-presents">COMET Presents</span><span class="poster-now-showing">Now Showing</span></div>
+        <div class="poster-title-block">
+          <span class="poster-genre-tag">Slice of Life · Hope</span>
+          <div class="poster-main-title">休むたびに気まずくなる私が、<br>「ここにいていい」と<br>思えた1日</div>
+          <span class="poster-subtitle-tag">アイスブレイク＋褒めゲー</span>
+          <div class="poster-credits">COMET × EVENT CINEMA ｜ 2025</div>
+        </div>
+        <div class="poster-hover-btn">▶ ストーリーを見る</div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top: 70px;" class="fade-in">
+    <div class="section-label">Coming Soon</div>
+    <p class="section-subtitle" style="margin-bottom:30px">さらなる物語が、まもなく公開予定。</p>
+    <div class="coming-soon-grid">
+      <div class="coming-soon-card"><div class="cs-icon">🎞️</div><div class="cs-label">Coming Soon</div></div>
+      <div class="coming-soon-card"><div class="cs-icon">🎞️</div><div class="cs-label">Coming Soon</div></div>
+      <div class="coming-soon-card"><div class="cs-icon">🎞️</div><div class="cs-label">Coming Soon</div></div>
+    </div>
+  </div>
+</section>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-2"></div></div>
+<section id="video">
+  <div class="section-label fade-in">Featured Presentation</div>
+  <h2 class="section-title fade-in">なぜ、いま「社内イベント」なのか？</h2>
+  <p class="section-subtitle fade-in">専門家が語る、組織を変えるイベント設計の本質</p>
+  <div class="gold-divider fade-in"><div class="gold-divider-diamond"></div></div>
+  <div class="video-container fade-in">
+    <div class="video-frame">
+      <div class="video-wrapper">
+        <iframe src="https://player.vimeo.com/video/1163987139?h=ec&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-caption">
+        社内イベントを「ただの娯楽」で終わらせない。<br>
+        組織変革につながる設計のポイントを、実例とともに解説します。
+      </div>
+    </div>
+  </div>
+</section>
+<div class="marquee-lights" id="marquee-video"></div>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-video"></div></div>
+<section id="message">
+  <div class="section-label fade-in">Our Message</div>
+  <div class="message-lead fade-in">「社内イベント」は、<br>コストじゃなく、<br><em>投資</em>だった。</div>
+  <div class="gold-divider fade-in"><div class="gold-divider-diamond"></div></div>
+  <div class="message-body fade-in">
+    <p>上の3つの物語に登場する人たちは、みんな最初は乗り気ではありませんでした。<br><br>社内イベントを「面倒くさい」「意味がない」「お金の無駄」と思っていた人たちです。<br><br>でも、たった1日。<br><span class="message-highlight">「ちゃんと設計された」イベントを体験したことで、何かが変わりました。</span><br><br>相談しやすくなった。仕事に誇りを持てた。「ここにいていい」と思えた。<br><br>それは、数字には表れにくい変化かもしれません。<br>でも、<span class="message-highlight">組織の中に静かに積み重なっていく、とても大切なもの</span>です。<br><br>私たちCOMETは、「社内イベントで組織を変える」ことを、真剣に考えています。<br>楽しいだけじゃない。盛り上がるだけでもない。<br><strong>その後の"働き方"に、ちゃんとつながるイベント設計</strong>を届けたいと思っています。</p>
+  </div>
+</section>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-3"></div></div>
+<section id="why">
+  <div class="section-label fade-in">Why It Works</div>
+  <h2 class="section-title fade-in">なぜ、社内イベントで組織が変わるのか</h2>
+  <p class="section-subtitle fade-in">3つの物語が証明した、変化のメカニズム</p>
+  <div class="gold-divider fade-in"><div class="gold-divider-diamond"></div></div>
+  <div class="why-grid">
+    <div class="why-card fade-in"><span class="why-number">01</span><span class="why-icon">🎯</span><div class="why-title">目的と設計がある</div><p class="why-text">「何をさせられるか分からない」時間ではなく、明確な目的・タイムライン・進行台本がある。参加者が安心して体験できる設計が、変化の入口を開きます。</p></div>
+    <div class="why-card fade-in" style="transition-delay:0.15s"><span class="why-number">02</span><span class="why-icon">🤝</span><div class="why-title">「体験」が関係を変える</div><p class="why-text">言葉だけでは変わらない関係も、一緒に謎を解いたり、家族を迎えたりする「共体験」が、心の距離をぐっと縮めます。</p></div>
+    <div class="why-card fade-in" style="transition-delay:0.3s"><span class="why-number">03</span><span class="why-icon">💡</span><div class="why-title">日常につながる余韻</div><p class="why-text">イベントが終わったあとに残る「相談しやすさ」「誇り」「安心感」こそが本当の成果。単発で終わらない、継続的な組織変化を設計します。</p></div>
+  </div>
+</section>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-4"></div></div>
+<section id="voices">
+  <div class="section-label fade-in">Voices</div>
+  <h2 class="section-title fade-in">あの日の、一言</h2>
+  <p class="section-subtitle fade-in">3つの物語から生まれた、本当の変化</p>
+  <div class="gold-divider fade-in"><div class="gold-divider-diamond"></div></div>
+  <div class="voices-grid">
+    <div class="voice-card fade-in"><p class="voice-quote">「この人に相談しても大丈夫」って。<br>仲良くなったわけじゃない。<br>でも、相談の抵抗が1段下がった。</p><div class="voice-attr">── Z世代エンジニア・謎解きプラン体験後</div></div>
+    <div class="voice-card fade-in" style="transition-delay:0.15s"><p class="voice-quote">綺麗ごとでもいい。<br>現場に落とせる形にするなら、俺がやる。</p><div class="voice-attr">── 50代工場責任者・ファミリーデー体験後</div></div>
+    <div class="voice-card fade-in" style="transition-delay:0.3s"><p class="voice-quote">「ここにいていい」。<br>会社が好きか嫌いか、じゃない。<br>働き続ける選択肢が、現実に見えた。</p><div class="voice-attr">── ワーキングマザー・褒めゲー体験後</div></div>
+  </div>
+</section>
+<div class="marquee-lights" id="marquee-cta"></div>
+<section id="cta">
+  <div class="section-label fade-in">Contact</div>
+  <h2 class="section-title fade-in" style="margin-bottom:16px">あなたのチームにも、<br>この物語を。</h2>
+  <p class="section-subtitle fade-in">まず、お気軽にご相談ください。<br>あなたの組織に合ったイベント設計を、一緒に考えます。</p>
+  <div class="ticket-box fade-in" style="margin:0 auto">
+    <div class="ticket-main">
+      <p class="cta-eyebrow">Event Cinema × COMET</p>
+      <h3 class="cta-title">社内イベントについて、<br>相談してみませんか？</h3>
+      <p class="cta-body">「うちの会社でも、こういうイベントできるの？」<br>「費用はどのくらい?」「何から始めたらいい？」<br><br>どんな小さな疑問でも、まずは映画の話でも、歓迎です。</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary">🎟️ 無料相談をする</a>
+        <a href="#" class="btn-secondary">💬 LINEで問い合わせる</a>
+      </div>
+    </div>
+    <div class="ticket-circles"><div class="ticket-circle"></div><div class="ticket-circle"></div></div>
+    <div class="ticket-stub"><span class="ticket-stub-text">COMET × EVENT CINEMA</span><span class="ticket-stub-text">NO. 0001</span></div>
+  </div>
+  <p style="margin-top:40px; font-size:12px; color:var(--text-dim); letter-spacing:0.15em;" class="fade-in">ご相談は無料です。お気軽にどうぞ。</p>
+</section>
+<div class="filmstrip"><div class="filmstrip-holes" id="filmstrip-footer"></div></div>
+<footer>
+  <img src="images/logo.png" alt="COMET" />
+  <p>© 2025 株式会社COMET. All Rights Reserved.</p>
+  <p style="margin-top:8px">EVENT CINEMA — 実話をもとにしたフィクションです</p>
+</footer>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">▶</button>
+<div class="modal-overlay" id="modal1">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal1')">✕</button>
+    <iframe src="story-animation.html" class="modal-video-frame" allowfullscreen></iframe>
+  </div>
+</div>
+<div class="modal-overlay" id="modal2">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal2')">✕</button>
+    <iframe src="story-animation-family.html" class="modal-video-frame" allowfullscreen></iframe>
+  </div>
+</div>
+<div class="modal-overlay" id="modal3">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal3')">✕</button>
+    <iframe src="story-animation-praise.html" class="modal-video-frame" allowfullscreen></iframe>
+  </div>
+</div>
+<script>
+  function createFilmstrip(id) { const el = document.getElementById(id); if (!el) return; for (let i = 0; i < 80; i++) { const hole = document.createElement('div'); hole.className = 'filmstrip-hole'; el.appendChild(hole); } }
+  ['filmstrip-top','filmstrip-mid','filmstrip-problems','filmstrip-2','filmstrip-video','filmstrip-3','filmstrip-4','filmstrip-footer'].forEach(createFilmstrip);
+  function createMarquee(id) { const el = document.getElementById(id); if (!el) return; for (let i = 0; i < 60; i++) { const light = document.createElement('div'); light.className = 'marquee-light'; el.appendChild(light); } }
+  ['marquee-top','marquee-mid','marquee-video','marquee-cta'].forEach(createMarquee);
+  function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
+  document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', e => { if (e.target === m) { m.classList.remove('active'); document.body.style.overflow = ''; } }); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.querySelectorAll('.modal-overlay.active').forEach(m => { m.classList.remove('active'); document.body.style.overflow = ''; }); } });
+  const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  window.addEventListener('scroll', () => { const btn = document.getElementById('scrollTop'); if (window.scrollY > 400) btn.classList.add('visible'); else btn.classList.remove('visible'); });
+</script>
+</body>
+</html>
