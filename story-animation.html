@@ -352,6 +352,9 @@
         font-size: 12px;
       }
     }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
   </style>
 </head>
 <body>
@@ -613,10 +616,15 @@
     // Initialize
     updateUI();
     
-    // Auto-start after 2 seconds
-    setTimeout(() => {
-      startAutoPlay();
-    }, 2000);
+    // ビューポート連動：表示中のみ自動再生
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (!isPlaying) startAutoPlay();
+      } else {
+        stopAutoPlay();
+      }
+    }, { threshold: 0.5 });
+    visibilityObserver.observe(document.querySelector('.story-container'));
   </script>
 </body>
 </html>
