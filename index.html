@@ -81,9 +81,9 @@
     .poster-badge { position: absolute; top: -12px; right: 16px; background: var(--gold); color: var(--burgundy-dark); font-family: 'Playfair Display', serif; font-size: 9px; font-weight: 700; letter-spacing: 0.15em; padding: 4px 12px; text-transform: uppercase; z-index: 4; }
     .poster-hover-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(201,168,76,0.9); color: var(--burgundy-dark); font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; padding: 12px 28px; text-transform: uppercase; opacity: 0; transition: all 0.35s ease; z-index: 5; pointer-events: none; white-space: nowrap; border: none; }
     .poster-card:hover .poster-hover-btn { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    .coming-soon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1100px; margin: 60px auto 0; }
-    @media (max-width: 700px) { .coming-soon-grid { grid-template-columns: 1fr; max-width: 400px; } }
-    .coming-soon-card { border: 1px dashed rgba(201,168,76,0.25); border-radius: 2px; aspect-ratio: 2/3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: rgba(0,0,0,0.2); }
+    .coming-soon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 700px; margin: 40px auto 0; }
+    @media (max-width: 700px) { .coming-soon-grid { grid-template-columns: repeat(3, 1fr); max-width: 100%; gap: 12px; } }
+    .coming-soon-card { border: 1px dashed rgba(201,168,76,0.25); border-radius: 2px; aspect-ratio: 3/2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: rgba(0,0,0,0.2); }
     .coming-soon-card .cs-label { font-family: 'Playfair Display', serif; font-size: 13px; letter-spacing: 0.3em; color: rgba(201,168,76,0.35); text-transform: uppercase; }
     .coming-soon-card .cs-icon { font-size: 30px; opacity: 0.15; }
     #message { background: linear-gradient(180deg, var(--burgundy-dark) 0%, var(--burgundy) 50%, var(--burgundy-dark) 100%); text-align: center; position: relative; overflow: hidden; }

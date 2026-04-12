@@ -591,6 +591,9 @@
       if (isPlaying) {
         stopAutoPlay();
       } else {
+        // ▶ は常にシーン0から再生
+        stopAutoPlay();
+        showScene(0);
         startAutoPlay();
       }
     }
@@ -622,18 +625,8 @@
       }
     });
 
-    // Initialize
+    // Initialize（自動再生なし・▶ボタンを押すまで待機）
     updateUI();
-    
-    // ビューポート連動：表示中のみ自動再生
-    const visibilityObserver = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        if (!isPlaying) startAutoPlay();
-      } else {
-        stopAutoPlay();
-      }
-    }, { threshold: 0.5 });
-    visibilityObserver.observe(document.querySelector('.story-container'));
   </script>
 </body>
 </html>
