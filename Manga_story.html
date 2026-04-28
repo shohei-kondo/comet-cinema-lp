@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>社内イベントで組織が変わる | COMET</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Bangers&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  min-height: 100%;
+  background: #e5e5e5;
+  display: flex;
+  justify-content: center;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+#root {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background: #fafaf8;
+  position: relative;
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+
+const { useState, useRef, useEffect, createContext, useContext } = React;
+
+/* ── tokens ── */
+const C = { cyan: '#2AA5DB', red: '#F23838', green: '#02BF61', yellow: '#FFE133', black: '#111', white: '#fff', offWhite: '#fafaf8' };
+
+/* ── tweak context ── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "heroStyle": "ライト",
+  "mangaQuality": 3,
+  "cardLayout": "グリッド"
+} /*EDITMODE-END*/;
+const TweaksCtx = createContext(TWEAK_DEFAULTS);
+
+/* ════════════════════════════════════════
+   ① 失敗4コマ
+════════════════════════════════════════ */
+const YONKOMA = [
+{ num: 1, caption: '企画は豪華だった', bubble: '豪華なケータリング\n用意しました！', charPos: 'left', bg: '#fff', label: '华やかな会場セッティング。社員は受け身で座っている。' },
+{ num: 2, caption: 'でも…', bubble: '…で、何するの\nこれ？', charPos: 'right', bg: '#fff', label: '隣の人と目が合うが、会話が生まれない。スマホをいじり始める人も。' },
+{ num: 3, caption: '翌週になっても', bubble: 'あのイベント、\n何だったんだろう', charPos: 'left', bg: '#f8f8f8', label: 'オフィスで独り言。何も変わっていない。' },
+{ num: 4, caption: 'そして来年も同じ予算が…', bubble: '今年もやっとこう\nか（惰性）', charPos: 'right', bg: '#FEF0F0', drama: true, label: '会議室。前回の反省もなく、また同じ企画書が開かれる。' }];
+
+
+function YonkomaPanel({ item, bw, hOpacity, hSize }) {
+  return (
+    <div style={{ position: 'relative', border: `${bw}px solid ${C.black}`, background: item.bg, overflow: 'hidden', flex: 1 }}>
+      {/* hatching */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none',
+        backgroundImage: `repeating-linear-gradient(45deg,transparent,transparent ${hSize}px,rgba(0,0,0,${hOpacity}) ${hSize}px,rgba(0,0,0,${hOpacity}) ${hSize + 1}px)` }} />
+      {/* drama tint */}
+      {item.drama && <div style={{ position: 'absolute', inset: 0, background: 'rgba(242,56,56,0.06)' }} />}
+      {/* number badge */}
+      <div style={{ position: 'absolute', top: 0, left: 0,
+        background: item.drama ? C.red : C.black, color: '#fff',
+        fontFamily: 'Bangers, cursive', fontSize: 18, lineHeight: 1,
+        padding: '3px 8px', zIndex: 3 }}>{item.num}</div>
+      {/* character */}
+      {item.charPos &&
+      <div style={{ position: 'absolute', bottom: 0,
+        left: item.charPos === 'left' ? 22 : 'auto', right: item.charPos === 'right' ? 22 : 'auto',
+        width: 30, height: 52, background: 'rgba(0,0,0,0.13)', borderRadius: '50% 50% 0 0' }} />
+      }
+      {/* bubble */}
+      {item.bubble &&
+      <div style={{ position: 'absolute', top: 24, left: 6, right: 6,
+        background: '#fff', border: `1.5px solid ${C.black}`, borderRadius: 8,
+        padding: '4px 7px', fontSize: 10, fontWeight: 700, lineHeight: 1.35,
+        whiteSpace: 'pre-line', zIndex: 3 }}>{item.bubble}</div>
+      }
+      {/* caption */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        background: 'rgba(0,0,0,0.75)', color: '#fff', fontSize: 9, fontWeight: 700,
+        padding: '3px 7px', lineHeight: 1.4, zIndex: 3 }}>{item.caption}</div>
+      {/* placeholder label */}
+      <div style={{ position: 'absolute', bottom: 22, left: 6, right: 6,
+        fontSize: 8, color: 'rgba(0,0,0,0.28)', fontWeight: 700, lineHeight: 1.3 }}>{item.label}</div>
+    </div>);
+
+}
+
+function FailureSection() {
+  const { mangaQuality } = useContext(TweaksCtx);
+  const bw = (mangaQuality * 0.6 + 0.8).toFixed(1);
+  const hOpacity = ((mangaQuality - 1) * 0.022).toFixed(3);
+  const hSize = 5 + mangaQuality * 1.5;
+
+  return (
+    <section style={{ borderBottom: `3px solid ${C.black}` }}>
+      {/* header */}
+      <div style={{ background: C.red, padding: '20px 18px 16px', borderBottom: `2.5px solid ${C.black}` }}>
+        <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>
+          CHAPTER 01
+        </div>
+        <div style={{ color: '#fff', fontSize: 18, fontWeight: 900, lineHeight: 1.4 }}>
+          なぜ、あなたの会社のイベントは<br />「盛り上がらない」のか。
+        </div>
+        <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, lineHeight: 1.8, marginTop: 10 }}>
+          良かれと思った「親睦」が、いつの間にか「苦行」になっていませんか？<br />
+          「毎年恒例だから」という思考停止が、社員のモチベーションを削り、<br />
+          「イベント＝時間の無駄」という空気を生んでいる。<br />
+          あなたの会社でも、こんな「見えない溝」が深まっていませんか？
+        </div>
+      </div>
+
+      {/* 失敗マンガ: 実画像 */}
+      <div style={{ padding: '14px 14px 0' }}>
+        <img src="uploads/sippai_3.png" alt="失敗例マンガ" style={{ width: '100%', display: 'block', border: `2.5px solid ${C.black}`, borderRadius: 4 }}/>
+      </div>
+
+      {/* 気づき吹き出し */}
+      <div style={{ margin: '16px 14px 20px', background: C.yellow, border: `2.5px solid ${C.black}`, borderRadius: 8, padding: '14px 16px', position: 'relative' }}>
+        <div style={{ fontSize: 13, fontWeight: 900, lineHeight: 1.5, color: C.black }}>
+          「目的なきイベント」は、<br />お金と時間を消費するだけ。
+        </div>
+        <div style={{ fontSize: 11, color: '#444', lineHeight: 1.7, marginTop: 8 }}>
+          問題は予算でも規模でもない。<strong>設計</strong>がなかったことです。
+        </div>
+      </div>
+    </section>);
+
+}
+
+/* ════════════════════════════════════════
+   ② 成功マンガ（カードモーダル）
+════════════════════════════════════════ */
+const STORIES = [
+{
+  id: '01', color: '#2AA5DB', bgLight: '#EBF7FD', emoji: '🔍',
+  cardTitle: '「面倒だな」が、\n「また一緒に仕事しよう」\nに変わった日。',
+  cardSub: '創業30周年記念式典。謎解きゲームが、知らない社員の距離を縮めた。',
+  thumbImage: 'uploads/nazo_1.png',
+  images: ['uploads/nazo_1.png','uploads/nazo_2.png','uploads/nazo_3_3.png','uploads/nazo_4_4.png'],
+  panels: [],
+  column: { icon: '💡', heading: '「体験の設計」が関係を変える', body: '「また一緒に仕事しよう」——この言葉が自然に生まれたのは、偶然ではありません。謎解きという共体験が、部署・役職・年齢を超えた本音のコミュニケーションを生み出しました。\n\n設計されたイベントは、楽しい思い出で終わらず、翌日からの「働き方」を変えます。' }
+},
+{
+  id: '02', color: '#F23838', bgLight: '#FEF0F0', emoji: '👨‍👩‍👧', comingSoon: true,
+  cardTitle: '家族の目で、\n仕事が誇りに変わった日。',
+  cardSub: 'ファミリーデーで来た家族の笑顔が、自分の仕事への向き合い方を変えた。',
+  panels: [
+  { size: 'half', caption: '謎解きイベント', bubble: { text: '…あの人、\n怖そう', pos: 'tl' }, charPos: 'left', bg: '#fff' },
+  { size: 'half', caption: '30分後——', bubble: { text: 'これが答えだ！', pos: 'tr' }, charPos: 'right', bg: '#FEF0F0', drama: true },
+  { size: 'full', caption: '翌週、オフィスで', bubble: { text: 'あの件、相談\nしていいですか？', pos: 'tl' }, charPos: 'left', bg: '#f8f8f8', label: '先週は話せなかった二人が、自然に話しかけ合っている' }],
+
+  column: { icon: '🔗', heading: '共体験が関係を変える', body: '謎解きや体験ワークなど「共体験」は、肩書きや部署の壁を越えて、心の距離をぐっと縮めます。イベント後に「相談できる相手」が増えることが、最大の成果の一つです。' }
+},
+{
+  id: '03', color: '#02BF61', bgLight: '#E8FAF2', emoji: '🃏', comingSoon: true,
+  cardTitle: '褒め合ったら、\n職場が変わった。',
+  cardSub: 'ランチ交流会でカードゲームをしたら、お互いの価値観が分かり、心理的安全性が高まった。',
+  panels: [
+  { size: 'half', caption: 'ファミリーデー', bubble: { text: 'パパ、すごいね！', pos: 'tl' }, charPos: 'left', bg: '#fff' },
+  { size: 'half', caption: '', bubble: { text: 'なんか…\n誇らしいな', pos: 'tr' }, charPos: 'right', bg: '#E8FAF2', drama: true },
+  { size: 'full', caption: '1ヶ月後', bubble: { text: '最近、仕事\n楽しそうだね', pos: 'tl' }, charPos: 'left', bg: '#f8f8f8', label: '家族に言われるほど、毎日の仕事への向き合い方が変わった' }],
+
+  column: { icon: '🌱', heading: '日常につながる余韻', body: 'イベント後に残る「相談しやすさ」「誇り」「安心感」こそが本当の成果。単発で終わらない、継続的な組織変化を設計します。' }
+}];
+
+
+function Panel({ p, color }) {
+  const { mangaQuality } = useContext(TweaksCtx);
+  const bw = (mangaQuality * 0.6 + 0.8).toFixed(1);
+  const hOpacity = ((mangaQuality - 1) * 0.022).toFixed(3);
+  const hSize = 5 + mangaQuality * 1.5;
+  const minH = p.size === 'full' ? 115 : 95;
+  return (
+    <div style={{ position: 'relative', background: p.bg || '#fff', border: `${bw}px solid #111`, minHeight: minH, overflow: 'hidden', flex: p.size === 'wide' ? 2 : 1 }}>
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: `repeating-linear-gradient(45deg,transparent,transparent ${hSize}px,rgba(0,0,0,${hOpacity}) ${hSize}px,rgba(0,0,0,${hOpacity}) ${hSize + 1}px)` }} />
+      {p.drama && <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 50% 60%, ${color}18, transparent 70%)` }} />}
+      {p.charPos &&
+      <div style={{ position: 'absolute', bottom: 0, left: p.charPos === 'right' ? 'auto' : p.charPos === 'center' ? '50%' : 20, right: p.charPos === 'right' ? 20 : 'auto', transform: p.charPos === 'center' ? 'translateX(-50%)' : 'none', width: p.charPos === 'center' ? 40 : 30, height: p.charPos === 'center' ? 65 : 52, background: 'rgba(0,0,0,0.13)', borderRadius: '50% 50% 0 0' }} />
+      }
+      {p.bubble &&
+      <div style={{ position: 'absolute', top: p.bubble.pos.includes('t') ? 6 : 'auto', bottom: p.bubble.pos.includes('b') ? 8 : 'auto', left: p.bubble.pos.includes('l') ? 6 : 'auto', right: p.bubble.pos.includes('r') ? 6 : 'auto', background: '#fff', border: '1.5px solid #111', borderRadius: 8, padding: '4px 7px', fontSize: 10, fontWeight: 700, lineHeight: 1.35, whiteSpace: 'pre-line', maxWidth: '65%', zIndex: 3 }}>{p.bubble.text}</div>
+      }
+      {p.caption && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.78)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '3px 8px', lineHeight: 1.4, zIndex: 3 }}>{p.caption}</div>}
+      {p.label && <div style={{ position: 'absolute', bottom: 5, left: 7, right: 7, fontSize: 8, color: 'rgba(0,0,0,0.3)', fontWeight: 700, lineHeight: 1.3 }}>{p.label}</div>}
+    </div>);
+
+}
+
+function MangaPages({ story }) {
+  // Real images
+  if (story.images && story.images.length > 0) {
+    return (
+      <div style={{ padding: '14px 14px 0', display: 'grid', gap: 3 }}>
+        {story.images.map((src, i) => (
+          <img key={i} src={src} alt={`page ${i + 1}`} style={{ width: '100%', display: 'block', border: '2.5px solid #111' }}/>
+        ))}
+      </div>
+    );
+  }
+  // Wireframe panels
+  const panels = story.panels;
+  const rows = [];
+  let i = 0;
+  while (i < panels.length) {
+    const p = panels[i];
+    if (p.size === 'full') {rows.push([p]);i++;} else
+    if (i + 1 < panels.length) {rows.push([p, panels[i + 1]]);i += 2;} else
+    {rows.push([p]);i++;}
+  }
+  return (
+    <div style={{ display: 'grid', gap: 3, padding: '14px 14px 0' }}>
+      {rows.map((row, ri) =>
+      <div key={ri} style={{ display: 'flex', gap: 3 }}>
+          {row.map((p, pi) => <Panel key={pi} p={p} color={story.color} />)}
+        </div>
+      )}
+    </div>);
+
+}
+
+function ColumnBox({ story }) {
+  return (
+    <div style={{ margin: '14px 14px 20px', border: '2.5px solid #111', borderRadius: 6, overflow: 'hidden' }}>
+      <div style={{ background: story.color, color: '#fff', padding: '10px 14px', borderBottom: '2px solid #111', display: 'flex', gap: 8, alignItems: 'center', fontSize: 12, fontWeight: 900 }}>
+        <span style={{ fontSize: 18 }}>{story.column.icon}</span>
+        COLUMN {story.id} — {story.column.heading}
+      </div>
+      <div style={{ background: '#fff', padding: '14px 16px', fontSize: 11, lineHeight: 1.85, color: '#333' }}>
+        {story.column.body}
+      </div>
+    </div>);
+
+}
+
+function StoryModal({ story, stories, onClose, onNavigate }) {
+  const scrollRef = useRef(null);
+  const idx = stories.findIndex((s) => s.id === story.id);
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [story.id]);
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'flex-end', background: 'rgba(0,0,0,0.5)' }}
+    onClick={(e) => {if (e.target === e.currentTarget) onClose();}}>
+      <div ref={scrollRef} style={{ width: '100%', maxWidth: 430, maxHeight: '92vh', background: '#fafaf8', borderRadius: '16px 16px 0 0', border: '2.5px solid #111', borderBottom: 'none', overflowY: 'auto', animation: 'sheetUp 0.28s cubic-bezier(0.22,1,0.36,1)', margin: '0 auto' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 10, background: story.color, borderBottom: '2.5px solid #111', padding: '14px 16px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <button onClick={onClose} style={{ width: 34, height: 34, borderRadius: '50%', background: '#fff', border: '2px solid #111', fontSize: 16, fontWeight: 900, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }}>←</button>
+            <div>
+              <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 3 }}>STORY {story.id}</div>
+              <div style={{ color: '#fff', fontSize: 17, fontWeight: 900, lineHeight: 1.35, whiteSpace: 'pre-line' }}>{story.cardTitle}</div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 4, marginTop: 12 }}>
+            {stories.map((s, i) =>
+            <div key={s.id} onClick={() => onNavigate(s)} style={{ flex: 1, height: 4, borderRadius: 2, cursor: 'pointer', background: i <= idx ? '#fff' : 'rgba(255,255,255,0.3)', transition: 'background 0.2s' }} />
+            )}
+          </div>
+        </div>
+        <MangaPages story={story} />
+        <ColumnBox story={story} />
+        {(() => {
+          const next = stories[idx + 1];
+          return next ?
+          <div style={{ padding: '0 14px 28px' }}>
+              <div style={{ fontSize: 11, color: '#888', fontWeight: 700, marginBottom: 8 }}>NEXT STORY ▸</div>
+              <div onClick={() => onNavigate(next)} style={{ border: '2.5px solid #111', borderRadius: 8, overflow: 'hidden', display: 'flex', cursor: 'pointer', boxShadow: '3px 3px 0 #111', background: '#fff' }}>
+                <div style={{ width: 64, background: next.color, borderRight: '2.5px solid #111', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: 10, flexShrink: 0 }}>
+                  <div style={{ fontFamily: 'Bangers, cursive', fontSize: 22, color: '#fff', lineHeight: 1 }}>{next.id}</div>
+                  <div style={{ fontSize: 20 }}>{next.emoji}</div>
+                </div>
+                <div style={{ padding: '12px 14px', flex: 1 }}>
+                  <div style={{ fontSize: 11, color: next.color, fontWeight: 700, marginBottom: 4 }}>次の話を読む</div>
+                  <div style={{ fontSize: 13, fontWeight: 900, lineHeight: 1.4, whiteSpace: 'pre-line' }}>{next.cardTitle}</div>
+                </div>
+              </div>
+            </div> :
+
+          <div style={{ padding: '0 14px 28px' }}>
+              <div style={{ background: '#111', borderRadius: 10, padding: '22px 18px', textAlign: 'center' }}>
+                <div style={{ color: C.yellow, fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', marginBottom: 6 }}>3つの物語を読み終えました</div>
+                <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, lineHeight: 1.45, marginBottom: 14 }}>あなたの組織に、変化のきっかけを。</div>
+                <button style={{ width: '100%', background: C.red, color: '#fff', border: '2.5px solid #fff', borderRadius: 6, padding: '14px', fontSize: 14, fontWeight: 900, cursor: 'pointer' }}>✉️ 無料相談を予約する</button>
+              </div>
+            </div>;
+
+        })()}
+      </div>
+      <style>{`@keyframes sheetUp { from { transform:translateY(60px);opacity:0; } to { transform:none;opacity:1; } }`}</style>
+    </div>);
+
+}
+
+function StoryCard({ story, onClick, compact }) {
+  const [pressed, setPressed] = useState(false);
+  const { mangaQuality } = useContext(TweaksCtx);
+  const bw = (mangaQuality * 0.6 + 0.8).toFixed(1) + 'px';
+  const thumbH = compact ? 72 : 100;
+  const cs = story.comingSoon;
+
+  return (
+    <div
+      onClick={cs ? undefined : onClick}
+      onMouseDown={() => !cs && setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onTouchStart={() => !cs && setPressed(true)}
+      onTouchEnd={() => setPressed(false)}
+      style={{ border: `${bw} solid #111`, borderRadius: 8, overflow: 'hidden', cursor: cs ? 'default' : 'pointer', background: cs ? '#f5f5f5' : '#fff', boxShadow: (!cs && pressed) ? '1px 1px 0 #111' : '4px 4px 0 #111', transform: (!cs && pressed) ? 'translate(3px,3px)' : 'none', transition: 'box-shadow 0.08s, transform 0.08s', position: 'relative', opacity: cs ? 0.85 : 1 }}>
+      {/* thumb */}
+      <div style={{ height: thumbH, background: cs ? '#e8e8e8' : story.bgLight, borderBottom: `${bw} solid #111`, position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {story.thumbImage && !cs
+          ? <img src={story.thumbImage} alt="thumb" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}/>
+          : <div style={{ fontSize: 36, filter: cs ? 'grayscale(1)' : 'none' }}>{story.emoji}</div>
+        }
+        <div style={{ position: 'absolute', top: 0, left: 0, background: cs ? '#888' : story.color, color: '#fff', fontFamily: 'Bangers, cursive', fontSize: 18, lineHeight: 1, padding: '3px 8px', borderBottom: `2px solid #111`, borderRight: `2px solid #111` }}>{story.id}</div>
+        {cs && (
+          <div style={{ position: 'absolute', top: 0, right: 0, background: '#111', color: '#fff', fontSize: 9, fontWeight: 900, padding: '4px 8px', letterSpacing: '0.08em' }}>
+            COMING SOON
+          </div>
+        )}
+      </div>
+      <div style={{ padding: compact ? '10px 10px 0' : '12px 14px 0' }}>
+        <div style={{ fontSize: 10, color: cs ? '#888' : story.color, fontWeight: 700, marginBottom: 4 }}>STORY {story.id}</div>
+        <div style={{ fontSize: compact ? 12 : 14, fontWeight: 900, lineHeight: 1.35, whiteSpace: 'pre-line', marginBottom: compact ? 4 : 6, color: cs ? '#555' : '#111' }}>{story.cardTitle}</div>
+        {!compact && <div style={{ fontSize: 11, color: '#888', lineHeight: 1.55, marginBottom: 2 }}>{story.cardSub}</div>}
+      </div>
+      <div style={{ borderTop: `${bw} solid #111`, padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: cs ? '#eee' : story.bgLight }}>
+        {cs
+          ? <span style={{ fontSize: 11, fontWeight: 700, color: '#888' }}>🔒 公開準備中…</span>
+          : <>
+              <span style={{ fontSize: 11, fontWeight: 700, color: story.color }}>マンガを読む</span>
+              <div style={{ width: 24, height: 24, borderRadius: '50%', background: story.color, border: '2px solid #111', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 900 }}>›</div>
+            </>
+        }
+      </div>
+    </div>
+  );
+}
+
+function SuccessSection({ onOpen }) {
+  const { cardLayout } = useContext(TweaksCtx);
+  const isGrid = cardLayout === 'グリッド';
+  const isStrip = cardLayout === 'ストリップ';
+
+  return (
+    <section style={{ borderBottom: `3px solid ${C.black}` }}>
+      <div style={{ background: C.black, padding: '24px 18px 20px', borderBottom: `2.5px solid ${C.black}` }}>
+        <div style={{ color: C.cyan, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 02</div>
+        <div style={{ color: '#fff', fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>マンガで見る、<br />成功例</div>
+        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, lineHeight: 1.6, marginTop: 8 }}>設計されたイベントが、<br />組織をどう変えたか。3つの実話。</div>
+      </div>
+
+      {isStrip ?
+      <div style={{ display: 'flex', overflowX: 'auto', gap: 12, padding: '16px 14px 20px', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
+          {STORIES.map((s) =>
+        <div key={s.id} style={{ flex: '0 0 240px' }}>
+              <StoryCard story={s} onClick={() => onOpen(s)} compact />
+            </div>
+        )}
+        </div> :
+
+      <div style={{ padding: '16px 14px', display: 'grid', gap: 12, gridTemplateColumns: isGrid ? '1fr 1fr' : '1fr' }}>
+          {STORIES.map((s) =>
+        <StoryCard key={s.id} story={s} onClick={() => onOpen(s)} compact={isGrid} />
+        )}
+        </div>
+      }
+    </section>);
+
+}
+
+/* ════════════════════════════════════════
+   ③ ノウハウ＆動画
+════════════════════════════════════════ */
+const KNOWHOW = [
+{ num: '01', color: C.cyan, icon: '🎯', title: '目的を、先に設計する', desc: '「何を変えたいか」から逆算したイベント設計が、参加者の体験を根本から変えます。' },
+{ num: '02', color: C.red, icon: '🤝', title: '「体験」で関係をつくる', desc: 'ワークショップや謎解きなど、共体験が生む心理的距離の縮まりは、講演では得られません。' },
+{ num: '03', color: C.green, icon: '🔄', title: '余韻を、設計に組み込む', desc: 'イベント後の行動変容まで見越した設計が、投資対効果を何倍にも引き上げます。' }];
+
+
+function KnowhowSection() {
+  const [videoVisible, setVideoVisible] = useState(false);
+
+  return (
+    <section style={{ background: '#fafaf8', borderBottom: `3px solid ${C.black}` }}>
+      <div style={{ background: C.yellow, borderBottom: `2.5px solid ${C.black}`, padding: '22px 18px 18px' }}>
+        <div style={{ color: C.black, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 03</div>
+        <div style={{ color: C.black, fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>成功へのノウハウ<br />3つのポイント</div>
+      </div>
+
+      <div style={{ padding: '16px 14px' }}>
+        {KNOWHOW.map((k, i) =>
+        <div key={k.num} style={{ display: 'flex', gap: 14, alignItems: 'flex-start', marginBottom: i < KNOWHOW.length - 1 ? 16 : 0, paddingBottom: i < KNOWHOW.length - 1 ? 16 : 0, borderBottom: i < KNOWHOW.length - 1 ? `1.5px solid rgba(0,0,0,0.1)` : 'none' }}>
+            <div style={{ flexShrink: 0, width: 44, height: 44, borderRadius: '50%', background: k.color, border: `2.5px solid ${C.black}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{k.icon}</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
+                <span style={{ fontFamily: 'Bangers, cursive', fontSize: 18, color: k.color }}>{k.num}</span>
+                <span style={{ fontSize: 14, fontWeight: 900, color: C.black }}>{k.title}</span>
+              </div>
+              <div style={{ fontSize: 12, lineHeight: 1.75, color: '#444' }}>{k.desc}</div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 動画リンク */}
+      <div style={{ margin: '0 14px 20px', border: `2.5px solid ${C.black}`, borderRadius: 8, overflow: 'hidden', background: '#fff' }}>
+        <div style={{ background: C.black, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 18 }}>🎬</span>
+          <span style={{ color: '#fff', fontSize: 12, fontWeight: 900 }}>動画で見る：設計されたイベントの現場</span>
+        </div>
+        <div
+          onClick={() => setVideoVisible(!videoVisible)}
+          style={{ position: 'relative', background: '#e8e8e8', height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexDirection: 'column', gap: 8 }}>
+          {/* thumbnail placeholder */}
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 11px)' }} />
+          <div style={{ width: 56, height: 56, borderRadius: '50%', background: C.red, border: `3px solid ${C.black}`, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: '3px 3px 0 #111' }}>
+            <span style={{ fontSize: 24, marginLeft: 4 }}>▶</span>
+          </div>
+          <div style={{ zIndex: 1, fontSize: 11, fontWeight: 700, color: '#555' }}>
+            {videoVisible ? '▲ 動画を閉じる' : '再生する（約3分）'}
+          </div>
+        </div>
+        {videoVisible &&
+        <div style={{ background: '#111', color: 'rgba(255,255,255,0.5)', fontSize: 11, textAlign: 'center', padding: '20px 14px', lineHeight: 1.6 }}>
+            📹 ここに動画が埋め込まれます<br />
+            <span style={{ fontSize: 10 }}>（YouTubeまたはVimeoのiframe）</span>
+          </div>
+        }
+        <div style={{ padding: '12px 14px', fontSize: 11, lineHeight: 1.6, color: '#555' }}>
+          実際の現場映像と、参加者の声。「変わった前と後」を自分の目で確かめてください。
+        </div>
+      </div>
+    </section>);
+
+}
+
+/* ════════════════════════════════════════
+   ④ 投資メッセージ
+════════════════════════════════════════ */
+function InvestmentSection() {
+  return (
+    <section style={{ background: C.black, padding: '44px 20px', borderBottom: `3px solid ${C.black}` }}>
+      {/* dotted screen tone */}
+      <div style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)', backgroundSize: '10px 10px', position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <img src="uploads/logo_02white.png" alt="COMET" style={{ height: 24, width: 'auto', display: 'block' }} />
+          <span style={{ color: C.yellow, fontSize: 10, fontWeight: 700, letterSpacing: '0.12em' }}>CHAPTER 04</span>
+        </div>
+        <div style={{ color: '#fff', fontSize: 26, fontWeight: 900, lineHeight: 1.35, marginBottom: 16 }}>
+          「社内イベント」は、<br /><span style={{ color: C.yellow }}>コストじゃなく、</span><br />投資だった。
+        </div>
+        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: 1.8, marginBottom: 28, textWrap: 'pretty' }}>
+          楽しいだけじゃない。盛り上がるだけでもない。<br />
+          その後の"働き方"に、ちゃんとつながるイベント設計。<br />
+          それが、COMETの考えるイベントデザインです。
+        </div>
+
+        {/* 3数字 */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 4 }}>
+          {[
+          { val: '10', unit: '年', label: 'の実績' },
+          { val: '150', unit: '社+', label: 'の支援実績' },
+          { val: '300', unit: '件+', label: 'のイベント実績' }].
+          map((d) =>
+          <div key={d.label} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '14px 10px', textAlign: 'center' }}>
+              <div style={{ color: C.yellow, fontFamily: 'Bangers, cursive', fontSize: 28, lineHeight: 1 }}>{d.val}<span style={{ fontSize: 16 }}>{d.unit}</span></div>
+              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 9, marginTop: 4, fontWeight: 700, lineHeight: 1.35 }}>{d.label}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>);
+
+}
+
+/* ════════════════════════════════════════
+   CTA
+════════════════════════════════════════ */
+function CTASection() {
+  return (
+    <section style={{ background: C.offWhite, borderTop: `3px solid ${C.black}`, padding: '40px 20px 56px' }}>
+      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        <img src="uploads/logo_02.png" alt="COMET" style={{ height: 36, width: 'auto', display: 'block', margin: '0 auto 8px' }} />
+        <div style={{ fontSize: 11, color: '#888', fontWeight: 700 }}>社内イベントで組織を変える</div>
+      </div>
+      <p style={{ fontSize: 13, lineHeight: 1.85, color: '#333', marginBottom: 28, textWrap: 'pretty' }}>
+        まずは、あなたの組織の課題を教えてください。<br />
+        30分の無料相談から、変化ははじまります。
+      </p>
+      <a href="https://comet-event.co.jp/contact/" style={{ display: 'block', background: C.red, color: '#fff', textDecoration: 'none', fontSize: 15, fontWeight: 900, padding: '18px 24px', border: `2.5px solid ${C.black}`, borderRadius: 8, textAlign: 'center', boxShadow: `4px 4px 0 ${C.black}`, marginBottom: 12 }}>
+        ✉️ 無料相談をする
+      </a>
+      <a href="https://line.me/R/ti/p/@741blezt?ts=09021043&oat_content=url" style={{ display: 'block', background: '#06C755', color: '#fff', textDecoration: 'none', fontSize: 15, fontWeight: 900, padding: '18px 24px', border: `2.5px solid ${C.black}`, borderRadius: 8, textAlign: 'center', boxShadow: `4px 4px 0 ${C.black}` }}>
+        💬 LINEで問い合わせる
+      </a>
+    </section>);
+
+}
+
+/* ════════════════════════════════════════
+   HERO
+════════════════════════════════════════ */
+function Hero() {
+  const { heroStyle } = useContext(TweaksCtx);
+  const themes = {
+    'ライト': { bg: '#fafaf8', title: C.black, accent: C.cyan, sub: '#555', badgeBg: C.black, badgeText: '#fff', c1: C.cyan, c2: C.green },
+    'ダーク': { bg: '#111', title: '#fff', accent: C.yellow, sub: 'rgba(255,255,255,0.6)', badgeBg: C.cyan, badgeText: '#fff', c1: C.cyan, c2: C.yellow },
+    'イエロー': { bg: C.yellow, title: C.black, accent: C.red, sub: 'rgba(0,0,0,0.55)', badgeBg: C.black, badgeText: '#fff', c1: C.red, c2: '#fff' }
+  };
+  const t = themes[heroStyle] || themes['ライト'];
+  return (
+    <section style={{ background: t.bg, padding: '28px 20px 24px', position: 'relative', overflow: 'hidden', borderBottom: `2.5px solid ${C.black}` }}>
+      <div style={{ position: 'absolute', top: -50, right: -50, width: 180, height: 180, background: t.c1, borderRadius: '50%', opacity: 0.1 }} />
+      <div style={{ position: 'absolute', bottom: -60, left: -30, width: 160, height: 160, background: t.c2, borderRadius: '50%', opacity: 0.1 }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <h1 style={{ color: t.title, fontSize: 27, fontWeight: 900, lineHeight: 1.3, marginBottom: 6 }}>
+          社内イベントは、<br /><span style={{ color: t.accent }}>「設計」で変わる。</span>
+        </h1>
+        <div style={{ color: t.accent, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 14, opacity: 0.8 }}>〜 3つの実話マンガで知る、組織を一つにするイベントの力 〜
+
+        </div>
+        <p style={{ color: t.sub, fontSize: 13, lineHeight: 1.85, marginBottom: 24, textWrap: 'pretty' }}>
+          形だけの行事で終わらせない。<br />
+          成功する組織には、社員を動かす緻密な「設計図」があります。<br />
+          実話に基づく3つの組織変革ストーリーを、まずはマンガで。<br />
+          あなたの組織を劇的に変えるヒントが、ここにあります。
+        </p>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: t.badgeBg, color: t.badgeText, fontSize: 12, fontWeight: 700, padding: '9px 18px', borderRadius: 100 }}>
+          📖 マンガで読む・3分で分かる
+        </div>
+      </div>
+    </section>);
+
+}
+
+/* ════════════════════════════════════════
+   APP
+════════════════════════════════════════ */
+function App() {
+  const [openStory, setOpenStory] = useState(null);
+  const [tweaks, setTweakRaw] = useTweaks(TWEAK_DEFAULTS);
+
+  return (
+    <TweaksCtx.Provider value={tweaks}>
+      <Hero />
+      <FailureSection />
+      <SuccessSection onOpen={setOpenStory} />
+      <KnowhowSection />
+      <InvestmentSection />
+      <CTASection />
+
+      {openStory &&
+      <StoryModal
+        story={openStory}
+        stories={STORIES}
+        onClose={() => setOpenStory(null)}
+        onNavigate={(s) => setOpenStory(s)} />
+
+      }
+
+      <TweaksPanel>
+        <TweakSection label="ヒーロースタイル">
+          <TweakRadio id="heroStyle" label="ファーストビューの雰囲気" value={tweaks.heroStyle}
+          options={["ライト", "ダーク", "イエロー"]} onChange={(v) => setTweakRaw("heroStyle", v)} />
+        </TweakSection>
+        <TweakSection label="マンガ質感">
+          <TweakSlider id="mangaQuality" label="線の太さ・ハッチング" value={tweaks.mangaQuality}
+          min={1} max={5} step={1} onChange={(v) => setTweakRaw("mangaQuality", v)} />
+        </TweakSection>
+        <TweakSection label="カードレイアウト">
+          <TweakRadio id="cardLayout" label="成功例カードの並べ方" value={tweaks.cardLayout}
+          options={["グリッド", "リスト", "ストリップ"]} onChange={(v) => setTweakRaw("cardLayout", v)} />
+        </TweakSection>
+      </TweaksPanel>
+    </TweaksCtx.Provider>);
+
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
