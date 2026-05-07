@@ -1,1 +1,29 @@
 desktop.ini
+
+# Legacy / alternate HTML files not referenced by index.html
+COMET Manga LP.html
+Manga LP v2 bundle-src.html
+Manga LP v2.html
+Manga LP v3.html
+Manga LP.html
+manga-lp.html
+manga-nav-exploration.html
+Manga_story.html
+press-release.html
+story-animation-family.html
+story-animation-praise.html
+story-animation.html
+
+# Unused local images in uploads/ (not referenced by index.html)
+uploads/logo_01.png
+uploads/logo_01white.png
+uploads/nazo_1_web.png
+uploads/nazo_2_web.png
+uploads/nazo_3_web.png
+uploads/nazo_4_web.png
+uploads/pasted-1777302621097-0.png
+uploads/pasted-1778118861563-0.png
+uploads/pasted-1778118900232-0.png
+uploads/pasted-1778118935027-0.png
+uploads/sippai_3_web.png
+uploads/*スクリーンショット*.png

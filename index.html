@@ -211,59 +211,7 @@ const CONFIG = {
 };
 const TweaksCtx = createContext(CONFIG);
 
-/* ════════════════════════════════════════
-   ① 失敗4コマ
-════════════════════════════════════════ */
-const YONKOMA = [
-{ num: 1, caption: '企画は豪華だった', bubble: '豪華なケータリング\n用意しました！', charPos: 'left', bg: '#fff', label: '华やかな会場セッティング。社員は受け身で座っている。' },
-{ num: 2, caption: 'でも…', bubble: '…で、何するの\nこれ？', charPos: 'right', bg: '#fff', label: '隣の人と目が合うが、会話が生まれない。スマホをいじり始める人も。' },
-{ num: 3, caption: '翌週になっても', bubble: 'あのイベント、\n何だったんだろう', charPos: 'left', bg: '#f8f8f8', label: 'オフィスで独り言。何も変わっていない。' },
-{ num: 4, caption: 'そして来年も同じ予算が…', bubble: '今年もやっとこう\nか（惰性）', charPos: 'right', bg: '#FEF0F0', drama: true, label: '会議室。前回の反省もなく、また同じ企画書が開かれる。' }];
-
-
-function YonkomaPanel({ item, bw, hOpacity, hSize }) {
-  return (
-    <div style={{ position: 'relative', border: `${bw}px solid ${C.black}`, background: item.bg, overflow: 'hidden', flex: 1 }}>
-      {/* hatching */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: `repeating-linear-gradient(45deg,transparent,transparent ${hSize}px,rgba(0,0,0,${hOpacity}) ${hSize}px,rgba(0,0,0,${hOpacity}) ${hSize + 1}px)` }} />
-      {/* drama tint */}
-      {item.drama && <div style={{ position: 'absolute', inset: 0, background: 'rgba(242,56,56,0.06)' }} />}
-      {/* number badge */}
-      <div style={{ position: 'absolute', top: 0, left: 0,
-        background: item.drama ? C.red : C.black, color: '#fff',
-        fontFamily: 'Bangers, cursive', fontSize: 18, lineHeight: 1,
-        padding: '3px 8px', zIndex: 3 }}>{item.num}</div>
-      {/* character */}
-      {item.charPos &&
-      <div style={{ position: 'absolute', bottom: 0,
-        left: item.charPos === 'left' ? 22 : 'auto', right: item.charPos === 'right' ? 22 : 'auto',
-        width: 30, height: 52, background: 'rgba(0,0,0,0.13)', borderRadius: '50% 50% 0 0' }} />
-      }
-      {/* bubble */}
-      {item.bubble &&
-      <div style={{ position: 'absolute', top: 24, left: 6, right: 6,
-        background: '#fff', border: `1.5px solid ${C.black}`, borderRadius: 8,
-        padding: '4px 7px', fontSize: 10, fontWeight: 700, lineHeight: 1.35,
-        whiteSpace: 'pre-line', zIndex: 3 }}>{item.bubble}</div>
-      }
-      {/* caption */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: 'rgba(0,0,0,0.75)', color: '#fff', fontSize: 9, fontWeight: 700,
-        padding: '3px 7px', lineHeight: 1.4, zIndex: 3 }}>{item.caption}</div>
-      {/* placeholder label */}
-      <div style={{ position: 'absolute', bottom: 22, left: 6, right: 6,
-        fontSize: 8, color: 'rgba(0,0,0,0.28)', fontWeight: 700, lineHeight: 1.3 }}>{item.label}</div>
-    </div>);
-
-}
-
 function FailureSection() {
-  const { mangaQuality } = useContext(TweaksCtx);
-  const bw = (mangaQuality * 0.6 + 0.8).toFixed(1);
-  const hOpacity = ((mangaQuality - 1) * 0.022).toFixed(3);
-  const hSize = 5 + mangaQuality * 1.5;
-
   return (
     <section style={{ borderBottom: `3px solid ${C.black}` }}>
      <div className="pc-failure-section">
