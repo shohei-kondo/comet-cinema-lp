@@ -27,3 +27,7 @@ uploads/pasted-1778118900232-0.png
 uploads/pasted-1778118935027-0.png
 uploads/sippai_3_web.png
 uploads/*スクリーンショット*.png
+
+# Local-only backup/work files
+_pre-pull-backup/
+design-canvas.jsx
