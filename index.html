@@ -354,6 +354,131 @@ function FailureSection() {
 
 }
 
+const WHATIS_ITEMS = [
+  { name: '経営方針発表会', purpose: '方針浸透', color: C.cyan },
+  { name: '全社会議', purpose: '全社連携', color: C.cyan },
+  { name: '社内表彰式', purpose: '称賛文化', color: C.red },
+  { name: '懇親会', purpose: '部署横断', color: C.green },
+  { name: 'オフサイト', purpose: '戦略整理', color: C.cyan },
+  { name: '新入社員歓迎会', purpose: 'オンボーディング', color: C.green }
+];
+
+function MangaBubble({ children, tailSide = 'left' }) {
+  return (
+    <div style={{ position: 'relative', flex: 1, filter: 'drop-shadow(3px 3px 0 #111)' }}>
+      <svg viewBox="0 0 200 60" preserveAspectRatio="none"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        <path
+          d={tailSide === 'left'
+            ? 'M14,4 H192 a8,8 0 0 1 8,8 V44 a8,8 0 0 1 -8,8 H30 L14,60 L18,52 H14 a8,8 0 0 1 -8,-8 V12 a8,8 0 0 1 8,-8 Z'
+            : 'M8,4 H186 a8,8 0 0 1 8,8 V44 a8,8 0 0 1 -8,8 H182 L186,60 L170,52 H8 a8,8 0 0 1 -8,-8 V12 a8,8 0 0 1 8,-8 Z'}
+          fill="#fff" stroke="#111" strokeWidth="2.5" strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      <div style={{ position: 'relative', padding: '12px 16px 14px' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function WhatIsEventSection() {
+  const tilts = [-1.5, 1.0, -0.6, 1.4, -1.1, 0.7];
+  return (
+    <section className="pc-whatis-section" style={{
+      background: C.offWhite,
+      borderBottom: `3px solid ${C.black}`,
+      padding: '28px 18px 28px',
+      backgroundImage: 'repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(0,0,0,0.018) 12px,rgba(0,0,0,0.018) 13px)'
+    }}>
+      <div style={{ color: C.red, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 14 }}>
+        CHAPTER 01.5
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, marginBottom: 22, minHeight: 70 }}>
+        <div style={{ width: 38, height: 38, borderRadius: '50% 50% 50% 0',
+          background: 'rgba(0,0,0,0.13)', flexShrink: 0 }} />
+        <MangaBubble tailSide="left">
+          <div style={{ fontSize: 13, fontWeight: 900, color: C.black, lineHeight: 1.45 }}>
+            で、そもそも<br />「社内イベント」って？
+          </div>
+        </MangaBubble>
+      </div>
+
+      <h2 style={{ color: C.black, fontSize: 18, fontWeight: 900, lineHeight: 1.45, margin: '0 0 12px' }}>
+        社内イベントは、<br />
+        <span style={{ background: `linear-gradient(transparent 60%, ${C.yellow} 60%)`, padding: '0 4px' }}>
+          組織課題を解く"施策"
+        </span>
+        です。
+      </h2>
+
+      <p style={{ color: '#444', fontSize: 12, lineHeight: 1.85, margin: '0 0 22px' }}>
+        単なるレクではなく、<strong>目的設計→実行→測定</strong>を伴う経営アクション。
+        目的に応じて、最適な"形式"を選びます。
+      </p>
+
+      <div className="pc-whatis-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, padding: '4px 2px' }}>
+        {WHATIS_ITEMS.map((item, i) => (
+          <div key={item.name} style={{
+            position: 'relative',
+            background: '#fff',
+            border: '2.5px solid #111',
+            borderRadius: 4,
+            padding: '14px 11px 11px',
+            boxShadow: '3px 3px 0 #111',
+            transform: `rotate(${tilts[i]}deg)`,
+            overflow: 'hidden',
+            minHeight: 88
+          }}>
+            <div style={{
+              position: 'absolute', inset: 0, pointerEvents: 'none',
+              backgroundImage: 'repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(0,0,0,0.04) 6px,rgba(0,0,0,0.04) 7px)'
+            }} />
+            <div style={{
+              position: 'absolute', top: 0, left: 0,
+              background: item.color, color: '#fff',
+              fontFamily: 'Bangers, cursive', fontSize: 16, lineHeight: 1,
+              padding: '3px 8px',
+              borderRight: '2px solid #111', borderBottom: '2px solid #111'
+            }}>0{i + 1}</div>
+            <div style={{
+              position: 'absolute', top: -6, left: -6, width: 36, height: 36,
+              background: `radial-gradient(circle at 50% 50%, ${item.color}22 0%, transparent 70%)`,
+              pointerEvents: 'none'
+            }} />
+            <div style={{
+              fontSize: 13, fontWeight: 900, color: C.black,
+              lineHeight: 1.3, marginTop: 14, marginBottom: 8,
+              position: 'relative', zIndex: 1
+            }}>
+              {item.name}
+            </div>
+            <div style={{
+              display: 'inline-block', position: 'relative', zIndex: 1,
+              background: '#fff', border: '1.5px solid #111', borderRadius: 10,
+              fontSize: 10, fontWeight: 800, color: item.color,
+              padding: '3px 9px',
+              boxShadow: '1.5px 1.5px 0 #111'
+            }}>
+              {item.purpose}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginTop: 28, fontSize: 11, fontWeight: 700, color: '#555', textAlign: 'center', lineHeight: 1.6 }}>
+        ▼ どの形式でも、
+        <span style={{ background: `linear-gradient(transparent 60%, ${C.yellow} 60%)`, padding: '0 3px', color: C.black, fontWeight: 900 }}>
+          設計次第
+        </span>
+        で結果は変わる。
+      </div>
+    </section>
+  );
+}
+
 /* ════════════════════════════════════════
    ② 成功マンガ（カードモーダル）
 ════════════════════════════════════════ */
@@ -788,6 +913,7 @@ function App() {
     <TweaksCtx.Provider value={CONFIG}>
       <Hero />
       <FailureSection />
+      <WhatIsEventSection />
       <SuccessSection onOpen={setOpenStory} />
       <KnowhowSection />
       <InvestmentSection />
