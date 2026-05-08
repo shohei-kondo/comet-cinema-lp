@@ -318,9 +318,9 @@ function FailureSection() {
         <div className="pc-fh-eyebrow" style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>
           CHAPTER 01
         </div>
-        <div className="pc-fh-title" style={{ color: '#fff', fontSize: 18, fontWeight: 900, lineHeight: 1.4 }}>
+        <h2 className="pc-fh-title" style={{ color: '#fff', fontSize: 18, fontWeight: 900, lineHeight: 1.4 }}>
           なぜ、あなたの会社のイベントは<br />「盛り上がらない」のか。
-        </div>
+        </h2>
         <div className="pc-fh-body" style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, lineHeight: 1.8, marginTop: 10 }}>
           良かれと思った「親睦」が、いつの間にか「苦行」になっていませんか？<br />
           「毎年恒例だから」という思考停止が、社員のモチベーションを削り、<br />
@@ -542,7 +542,7 @@ function StoryCard({ story, onClick, compact }) {
       </div>
       <div style={{ padding: compact ? '10px 10px 0' : '12px 14px 0' }}>
         <div style={{ fontSize: 10, color: cs ? '#888' : story.color, fontWeight: 700, marginBottom: 4 }}>STORY {story.id}</div>
-        <div style={{ fontSize: compact ? 12 : 14, fontWeight: 900, lineHeight: 1.35, whiteSpace: 'pre-line', marginBottom: compact ? 4 : 6, color: cs ? '#555' : '#111' }}>{story.cardTitle}</div>
+        <h3 style={{ fontSize: compact ? 12 : 14, fontWeight: 900, lineHeight: 1.35, whiteSpace: 'pre-line', marginBottom: compact ? 4 : 6, color: cs ? '#555' : '#111' }}>{story.cardTitle}</h3>
         {!compact && <div style={{ fontSize: 11, color: '#888', lineHeight: 1.55, marginBottom: 2 }}>{story.cardSub}</div>}
       </div>
       <div style={{ borderTop: `${bw} solid #111`, padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: cs ? '#eee' : story.bgLight }}>
@@ -568,7 +568,7 @@ function SuccessSection({ onOpen }) {
       <div className="pc-section-pad" style={{ background: C.black, padding: '24px 18px 20px', borderBottom: `2.5px solid ${C.black}` }}>
         <div className="pc-wrap">
           <div style={{ color: C.cyan, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 02</div>
-          <div className="pc-h2" style={{ color: '#fff', fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>マンガで見る、成功例</div>
+          <h2 className="pc-h2" style={{ color: '#fff', fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>マンガで見る、成功例</h2>
           <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, lineHeight: 1.6, marginTop: 8 }}>設計されたイベントが、組織をどう変えたか。3つの実話。</div>
         </div>
       </div>
@@ -609,7 +609,7 @@ function KnowhowSection() {
       <div className="pc-section-pad" style={{ background: C.yellow, borderBottom: `2.5px solid ${C.black}`, padding: '22px 18px 18px' }}>
         <div className="pc-wrap">
           <div style={{ color: C.black, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 03</div>
-          <div className="pc-h2" style={{ color: C.black, fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>成功へのノウハウ・3つのポイント</div>
+          <h2 className="pc-h2" style={{ color: C.black, fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>成功へのノウハウ・3つのポイント</h2>
         </div>
       </div>
 
@@ -620,7 +620,7 @@ function KnowhowSection() {
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
                 <span style={{ fontFamily: 'Bangers, cursive', fontSize: 18, color: k.color }}>{k.num}</span>
-                <span style={{ fontSize: 14, fontWeight: 900, color: C.black }}>{k.title}</span>
+                <h3 style={{ fontSize: 14, fontWeight: 900, color: C.black, display: 'inline', margin: 0 }}>{k.title}</h3>
               </div>
               <div style={{ fontSize: 12, lineHeight: 1.75, color: '#444' }}>{k.desc}</div>
             </div>
@@ -674,9 +674,9 @@ function InvestmentSection() {
           <img src="uploads/logo_02white.png" alt="COMET" style={{ height: 24, width: 'auto', display: 'block' }} />
           <span style={{ color: C.yellow, fontSize: 10, fontWeight: 700, letterSpacing: '0.12em' }}>CHAPTER 04</span>
         </div>
-        <div style={{ color: '#fff', fontSize: 26, fontWeight: 900, lineHeight: 1.35, marginBottom: 16 }}>
+        <h2 style={{ color: '#fff', fontSize: 26, fontWeight: 900, lineHeight: 1.35, marginBottom: 16 }}>
           「社内イベント」は、<br /><span style={{ color: C.yellow }}>コストじゃなく、</span><br />投資だった。
-        </div>
+        </h2>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: 1.8, marginBottom: 28, textWrap: 'pretty' }}>
           楽しいだけじゃない。盛り上がるだけでもない。<br />
           その後の"働き方"に、ちゃんとつながるイベント設計。<br />
