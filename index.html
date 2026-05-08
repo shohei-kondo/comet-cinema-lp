@@ -343,10 +343,8 @@ function FailureSection() {
       {/* 気づき吹き出し */}
       <div className="pc-failure-aware" style={{ margin: '16px auto 20px', maxWidth: 1120, background: C.yellow, border: `2.5px solid ${C.black}`, borderRadius: 8, padding: '14px 16px', position: 'relative', marginLeft: 14, marginRight: 14 }}>
         <div style={{ fontSize: 13, fontWeight: 900, lineHeight: 1.5, color: C.black }}>
-          「目的なきイベント」は、<br />お金と時間を消費するだけ。
-        </div>
-        <div style={{ fontSize: 11, color: '#444', lineHeight: 1.7, marginTop: 8 }}>
-          問題は予算でも規模でもない。<strong>設計</strong>がなかったことです。
+          問題は予算でも規模でもなく、目的設計がなかったことです。<br />
+          「目的なきイベント」は、お金と時間を消費するだけで、組織には何も残りません。
         </div>
       </div>
      </div>
@@ -417,6 +415,9 @@ function WhatIsEventSection() {
       <p style={{ color: '#444', fontSize: 12, lineHeight: 1.85, margin: '0 0 22px' }}>
         単なるレクではなく、<strong>目的設計→実行→測定</strong>を伴う経営アクション。
         目的に応じて、最適な"形式"を選びます。
+      </p>
+      <p className="pc-body" style={{ color: '#444', fontSize: 12, lineHeight: 1.85, margin: '0 0 22px', textWrap: 'pretty' }}>
+        社内イベントは、単なるレクリエーションではなく、組織課題を解くための施策です。目的設計・実行・測定を伴う経営アクションであり、目的に応じて経営方針発表会・全社会議・社内表彰式・懇親会・オフサイトミーティング・新入社員歓迎会などの形式が選ばれます。
       </p>
 
       <div className="pc-whatis-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, padding: '4px 2px' }}>
@@ -759,6 +760,12 @@ function KnowhowSection() {
         )}
       </div>
 
+      <div style={{ padding: '0 14px 16px', maxWidth: 1120, margin: '0 auto' }}>
+        <p className="pc-body" style={{ fontSize: 12, lineHeight: 1.85, color: '#444', textWrap: 'pretty' }}>
+          3点あります。①目的を先に設計する：何を変えたいかから逆算する。②「体験」で関係をつくる：講演ではなく共体験で心理的距離を縮める。③余韻を設計に組み込む：イベント後の行動変容まで見越す。
+        </p>
+      </div>
+
       {/* 動画リンク */}
       <div style={{ margin: '0 14px 20px', maxWidth: 1120, marginLeft: 14, marginRight: 14, border: `2.5px solid ${C.black}`, borderRadius: 8, overflow: 'hidden', background: '#fff' }} className="pc-video-box">
         <div style={{ background: C.black, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -809,9 +816,7 @@ function InvestmentSection() {
           「社内イベント」は、<br /><span style={{ color: C.yellow }}>コストじゃなく、</span><br />投資だった。
         </h2>
         <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: 1.8, marginBottom: 28, textWrap: 'pretty' }}>
-          楽しいだけじゃない。盛り上がるだけでもない。<br />
-          その後の"働き方"に、ちゃんとつながるイベント設計。<br />
-          それが、COMETの考えるイベントデザインです。
+          設計次第で投資になります。楽しいだけ・盛り上がるだけで終わらず、その後の働き方につながるイベント設計が、投資対効果を引き上げます。
         </div>
 
        </div>
@@ -845,6 +850,7 @@ function CTASection() {
           <div style={{ fontSize: 11, color: '#888', fontWeight: 700 }}>社内イベントで組織を変える</div>
         </div>
         <p className="pc-body" style={{ fontSize: 13, lineHeight: 1.85, color: '#333', marginBottom: 28, textWrap: 'pretty', textAlign: 'center' }}>
+          10年・150社以上・300件以上の実績を持つ、社内イベント設計・運営の専門企業。経営方針発表会から懇親会まで、目的別に最適なイベントを設計します。無料相談から対応可能です。<br />
           まずは、あなたの組織の課題を教えてください。<br />
           30分の無料相談から、変化ははじまります。
         </p>
