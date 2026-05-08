@@ -14,19 +14,10 @@ story-animation-family.html
 story-animation-praise.html
 story-animation.html
 
-# Unused local images in uploads/ (not referenced by index.html)
-uploads/logo_01.png
-uploads/logo_01white.png
-uploads/nazo_1_web.png
-uploads/nazo_2_web.png
-uploads/nazo_3_web.png
-uploads/nazo_4_web.png
-uploads/pasted-1777302621097-0.png
-uploads/pasted-1778118861563-0.png
-uploads/pasted-1778118900232-0.png
-uploads/pasted-1778118935027-0.png
-uploads/sippai_3_web.png
-uploads/*スクリーンショット*.png
+# old/ — 未使用画像のローカル保管。Git には含めない
+old/
+
+# uploads/ — index.html 参照画像はリポジトリで同期する（無視ルールは置かない）
 
 # Local-only backup/work files
 _pre-pull-backup/
