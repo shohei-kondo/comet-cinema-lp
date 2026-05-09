@@ -363,9 +363,16 @@ const WHATIS_ITEMS = [
 
 function MangaBubble({ children, tailSide = 'left' }) {
   return (
-    <div style={{ position: 'relative', flex: 1, filter: 'drop-shadow(3px 3px 0 #111)' }}>
+    <div style={{
+      position: 'relative',
+      flex: '0 1 auto',
+      minWidth: 0,
+      width: 'max-content',
+      maxWidth: 'calc(100% - 48px)',
+      filter: 'drop-shadow(3px 3px 0 #111)'
+    }}>
       <svg viewBox="0 0 200 60" preserveAspectRatio="none"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
         <path
           d={tailSide === 'left'
             ? 'M14,4 H192 a8,8 0 0 1 8,8 V44 a8,8 0 0 1 -8,8 H30 L14,60 L18,52 H14 a8,8 0 0 1 -8,-8 V12 a8,8 0 0 1 8,-8 Z'
