@@ -178,8 +178,8 @@ body { display: flex; justify-content: center; }
   .pc-section-pad { padding: 64px 40px !important; }
   .pc-h1 { font-size: 48px !important; line-height: 1.2 !important; }
   .pc-h2 { font-size: 36px !important; line-height: 1.3 !important; }
-  .pc-body { font-size: 15px !important; }
-  .pc-section-pad .pc-wrap > div:first-child { font-size: 13px !important; }
+  .pc-body { font-size: 16px !important; }
+  .pc-section-pad .pc-wrap > div:first-child { font-size: 15px !important; }
   /* Failure section: side-by-side on PC */
   .pc-failure-section {
     display: grid !important;
@@ -274,7 +274,7 @@ body { display: flex; justify-content: center; }
   }
   .pc-invest-stats .pc-stat-val { font-size: 44px !important; }
   .pc-invest-stats .pc-stat-unit { font-size: 22px !important; }
-  .pc-invest-stats .pc-stat-label { font-size: 11px !important; }
+  .pc-invest-stats .pc-stat-label { font-size: 14px !important; }
   .pc-cta-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -293,6 +293,14 @@ body { display: flex; justify-content: center; }
   .pc-whatis-section {
     padding: 56px 40px !important;
   }
+  .pc-hero-subbrand { font-size: 16px !important; }
+  .pc-hero-tagline { font-size: 18px !important; line-height: 1.55 !important; }
+  .pc-whatis-bubble-row { min-height: 88px !important; gap: 14px !important; }
+  .pc-whatis-icon { width: 48px !important; height: 48px !important; }
+  .pc-whatis-bubble-shell { padding: 16px 22px 18px !important; }
+  .pc-whatis-bubble-inner { font-size: 18px !important; line-height: 1.5 !important; }
+  .pc-whatis-footer-line { font-size: 17px !important; }
+  .pc-whatis-bubble-row > div:last-child { max-width: calc(100% - 62px) !important; }
   .pc-hide { display: none !important; }
 }
 </style>
@@ -321,13 +329,13 @@ function FailureSection() {
      <div className="pc-failure-section">
       {/* header */}
       <div className="pc-failure-header" style={{ background: C.red, padding: '20px 18px 16px', borderBottom: `2.5px solid ${C.black}` }}>
-        <div className="pc-fh-eyebrow" style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>
+        <div className="pc-fh-eyebrow" style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>
           CHAPTER 01
         </div>
         <h2 className="pc-fh-title" style={{ color: '#fff', fontSize: 18, fontWeight: 900, lineHeight: 1.4 }}>
           なぜ、あなたの会社のイベントは<br />「盛り上がらない」のか。
         </h2>
-        <div className="pc-fh-body" style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, lineHeight: 1.8, marginTop: 10 }}>
+        <div className="pc-fh-body" style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, lineHeight: 1.8, marginTop: 10 }}>
           良かれと思った「親睦」が、いつの間にか「苦行」になっていませんか？<br />
           「毎年恒例だから」という思考停止が、社員のモチベーションを削り、<br />
           「イベント＝時間の無駄」という空気を生んでいる。<br />
@@ -342,7 +350,7 @@ function FailureSection() {
 
       {/* 気づき吹き出し */}
       <div className="pc-failure-aware" style={{ margin: '16px auto 20px', maxWidth: 1120, background: C.yellow, border: `2.5px solid ${C.black}`, borderRadius: 8, padding: '14px 16px', position: 'relative', marginLeft: 14, marginRight: 14 }}>
-        <div style={{ fontSize: 13, fontWeight: 900, lineHeight: 1.5, color: C.black }}>
+        <div style={{ fontSize: 14, fontWeight: 900, lineHeight: 1.5, color: C.black }}>
           問題は予算でも規模でもなく、目的設計がなかったことです。<br />
           「目的なきイベント」は、お金と時間を消費するだけで、組織には何も残りません。
         </div>
@@ -361,7 +369,7 @@ const WHATIS_ITEMS = [
   { name: '新入社員歓迎会', purpose: 'オンボーディング', color: C.green }
 ];
 
-function MangaBubble({ children, tailSide = 'left' }) {
+function MangaBubble({ children, tailSide = 'left', shellClassName = '' }) {
   return (
     <div style={{
       position: 'relative',
@@ -381,7 +389,7 @@ function MangaBubble({ children, tailSide = 'left' }) {
           vectorEffect="non-scaling-stroke"
         />
       </svg>
-      <div style={{ position: 'relative', padding: '12px 16px 14px' }}>
+      <div className={shellClassName} style={{ position: 'relative', padding: '12px 16px 14px' }}>
         {children}
       </div>
     </div>
@@ -397,15 +405,15 @@ function WhatIsEventSection() {
       padding: '28px 18px 28px',
       backgroundImage: 'repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(0,0,0,0.018) 12px,rgba(0,0,0,0.018) 13px)'
     }}>
-      <div style={{ color: C.red, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 14 }}>
+      <div style={{ color: C.red, fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 14 }}>
         CHAPTER 01.5
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, marginBottom: 22, minHeight: 70 }}>
-        <div style={{ width: 38, height: 38, borderRadius: '50% 50% 50% 0',
+      <div className="pc-whatis-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: 10, marginBottom: 22, minHeight: 70 }}>
+        <div className="pc-whatis-icon" style={{ width: 38, height: 38, borderRadius: '50% 50% 50% 0',
           background: 'rgba(0,0,0,0.13)', flexShrink: 0 }} />
-        <MangaBubble tailSide="left">
-          <div style={{ fontSize: 13, fontWeight: 900, color: C.black, lineHeight: 1.45 }}>
+        <MangaBubble tailSide="left" shellClassName="pc-whatis-bubble-shell">
+          <div className="pc-whatis-bubble-inner" style={{ fontSize: 15, fontWeight: 900, color: C.black, lineHeight: 1.45 }}>
             で、そもそも<br />「社内イベント」って？
           </div>
         </MangaBubble>
@@ -419,11 +427,11 @@ function WhatIsEventSection() {
         です。
       </h2>
 
-      <p style={{ color: '#444', fontSize: 12, lineHeight: 1.85, margin: '0 0 22px' }}>
+      <p style={{ color: '#444', fontSize: 15, lineHeight: 1.85, margin: '0 0 22px' }}>
         単なるレクではなく、<strong>目的設計→実行→測定</strong>を伴う経営アクション。
         目的に応じて、最適な"形式"を選びます。
       </p>
-      <p className="pc-body" style={{ color: '#444', fontSize: 12, lineHeight: 1.85, margin: '0 0 22px', textWrap: 'pretty' }}>
+      <p className="pc-body" style={{ color: '#444', fontSize: 15, lineHeight: 1.85, margin: '0 0 22px', textWrap: 'pretty' }}>
         社内イベントは、単なるレクリエーションではなく、組織課題を解くための施策です。目的設計・実行・測定を伴う経営アクションであり、目的に応じて経営方針発表会・全社会議・社内表彰式・懇親会・オフサイトミーティング・新入社員歓迎会などの形式が選ばれます。
       </p>
 
@@ -457,7 +465,7 @@ function WhatIsEventSection() {
               pointerEvents: 'none'
             }} />
             <div style={{
-              fontSize: 13, fontWeight: 900, color: C.black,
+              fontSize: 14, fontWeight: 900, color: C.black,
               lineHeight: 1.3, marginTop: 14, marginBottom: 8,
               position: 'relative', zIndex: 1
             }}>
@@ -466,7 +474,7 @@ function WhatIsEventSection() {
             <div style={{
               display: 'inline-block', position: 'relative', zIndex: 1,
               background: '#fff', border: '1.5px solid #111', borderRadius: 10,
-              fontSize: 10, fontWeight: 800, color: item.color,
+              fontSize: 14, fontWeight: 800, color: item.color,
               padding: '3px 9px',
               boxShadow: '1.5px 1.5px 0 #111'
             }}>
@@ -476,7 +484,7 @@ function WhatIsEventSection() {
         ))}
       </div>
 
-      <div style={{ marginTop: 28, fontSize: 11, fontWeight: 700, color: '#555', textAlign: 'center', lineHeight: 1.6 }}>
+      <div className="pc-whatis-footer-line" style={{ marginTop: 28, fontSize: 15, fontWeight: 700, color: '#555', textAlign: 'center', lineHeight: 1.6 }}>
         ▼ どの形式でも、
         <span style={{ background: `linear-gradient(transparent 60%, ${C.yellow} 60%)`, padding: '0 3px', color: C.black, fontWeight: 900 }}>
           設計次第
@@ -538,10 +546,10 @@ function Panel({ p, color }) {
       <div style={{ position: 'absolute', bottom: 0, left: p.charPos === 'right' ? 'auto' : p.charPos === 'center' ? '50%' : 20, right: p.charPos === 'right' ? 20 : 'auto', transform: p.charPos === 'center' ? 'translateX(-50%)' : 'none', width: p.charPos === 'center' ? 40 : 30, height: p.charPos === 'center' ? 65 : 52, background: 'rgba(0,0,0,0.13)', borderRadius: '50% 50% 0 0' }} />
       }
       {p.bubble &&
-      <div style={{ position: 'absolute', top: p.bubble.pos.includes('t') ? 6 : 'auto', bottom: p.bubble.pos.includes('b') ? 8 : 'auto', left: p.bubble.pos.includes('l') ? 6 : 'auto', right: p.bubble.pos.includes('r') ? 6 : 'auto', background: '#fff', border: '1.5px solid #111', borderRadius: 8, padding: '4px 7px', fontSize: 10, fontWeight: 700, lineHeight: 1.35, whiteSpace: 'pre-line', maxWidth: '65%', zIndex: 3 }}>{p.bubble.text}</div>
+      <div style={{ position: 'absolute', top: p.bubble.pos.includes('t') ? 6 : 'auto', bottom: p.bubble.pos.includes('b') ? 8 : 'auto', left: p.bubble.pos.includes('l') ? 6 : 'auto', right: p.bubble.pos.includes('r') ? 6 : 'auto', background: '#fff', border: '1.5px solid #111', borderRadius: 8, padding: '4px 7px', fontSize: 14, fontWeight: 700, lineHeight: 1.35, whiteSpace: 'pre-line', maxWidth: '65%', zIndex: 3 }}>{p.bubble.text}</div>
       }
-      {p.caption && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.78)', color: '#fff', fontSize: 9, fontWeight: 700, padding: '3px 8px', lineHeight: 1.4, zIndex: 3 }}>{p.caption}</div>}
-      {p.label && <div style={{ position: 'absolute', bottom: 5, left: 7, right: 7, fontSize: 8, color: 'rgba(0,0,0,0.3)', fontWeight: 700, lineHeight: 1.3 }}>{p.label}</div>}
+      {p.caption && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.78)', color: '#fff', fontSize: 14, fontWeight: 700, padding: '3px 8px', lineHeight: 1.4, zIndex: 3 }}>{p.caption}</div>}
+      {p.label && <div style={{ position: 'absolute', bottom: 5, left: 7, right: 7, fontSize: 14, color: 'rgba(0,0,0,0.3)', fontWeight: 700, lineHeight: 1.3 }}>{p.label}</div>}
     </div>);
 
 }
@@ -581,11 +589,11 @@ function MangaPages({ story }) {
 function ColumnBox({ story }) {
   return (
     <div style={{ margin: '14px 14px 20px', border: '2.5px solid #111', borderRadius: 6, overflow: 'hidden' }}>
-      <div style={{ background: story.color, color: '#fff', padding: '10px 14px', borderBottom: '2px solid #111', display: 'flex', gap: 8, alignItems: 'center', fontSize: 12, fontWeight: 900 }}>
+      <div style={{ background: story.color, color: '#fff', padding: '10px 14px', borderBottom: '2px solid #111', display: 'flex', gap: 8, alignItems: 'center', fontSize: 14, fontWeight: 900 }}>
         <span style={{ fontSize: 18 }}>{story.column.icon}</span>
         COLUMN {story.id} — {story.column.heading}
       </div>
-      <div style={{ background: '#fff', padding: '14px 16px', fontSize: 11, lineHeight: 1.85, color: '#333' }}>
+      <div style={{ background: '#fff', padding: '14px 16px', fontSize: 14, lineHeight: 1.85, color: '#333' }}>
         {story.column.body}
       </div>
     </div>);
@@ -607,7 +615,7 @@ function StoryModal({ story, stories, onClose, onNavigate }) {
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
             <button onClick={onClose} style={{ width: 34, height: 34, borderRadius: '50%', background: '#fff', border: '2px solid #111', fontSize: 16, fontWeight: 900, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }}>←</button>
             <div>
-              <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 3 }}>STORY {story.id}</div>
+              <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 3 }}>STORY {story.id}</div>
               <div style={{ color: '#fff', fontSize: 17, fontWeight: 900, lineHeight: 1.35, whiteSpace: 'pre-line' }}>{story.cardTitle}</div>
             </div>
           </div>
@@ -623,22 +631,22 @@ function StoryModal({ story, stories, onClose, onNavigate }) {
           const next = stories[idx + 1];
           return next ?
           <div style={{ padding: '0 14px 28px' }}>
-              <div style={{ fontSize: 11, color: '#888', fontWeight: 700, marginBottom: 8 }}>NEXT STORY ▸</div>
+              <div style={{ fontSize: 14, color: '#888', fontWeight: 700, marginBottom: 8 }}>NEXT STORY ▸</div>
               <div onClick={() => onNavigate(next)} style={{ border: '2.5px solid #111', borderRadius: 8, overflow: 'hidden', display: 'flex', cursor: 'pointer', boxShadow: '3px 3px 0 #111', background: '#fff' }}>
                 <div style={{ width: 64, background: next.color, borderRight: '2.5px solid #111', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, padding: 10, flexShrink: 0 }}>
                   <div style={{ fontFamily: 'Bangers, cursive', fontSize: 22, color: '#fff', lineHeight: 1 }}>{next.id}</div>
                   <div style={{ fontSize: 20 }}>{next.emoji}</div>
                 </div>
                 <div style={{ padding: '12px 14px', flex: 1 }}>
-                  <div style={{ fontSize: 11, color: next.color, fontWeight: 700, marginBottom: 4 }}>次の話を読む</div>
-                  <div style={{ fontSize: 13, fontWeight: 900, lineHeight: 1.4, whiteSpace: 'pre-line' }}>{next.cardTitle}</div>
+                  <div style={{ fontSize: 14, color: next.color, fontWeight: 700, marginBottom: 4 }}>次の話を読む</div>
+                  <div style={{ fontSize: 14, fontWeight: 900, lineHeight: 1.4, whiteSpace: 'pre-line' }}>{next.cardTitle}</div>
                 </div>
               </div>
             </div> :
 
           <div style={{ padding: '0 14px 28px' }}>
               <div style={{ background: '#111', borderRadius: 10, padding: '22px 18px', textAlign: 'center' }}>
-                <div style={{ color: C.yellow, fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', marginBottom: 6 }}>3つの物語を読み終えました</div>
+                <div style={{ color: C.yellow, fontSize: 14, fontWeight: 700, letterSpacing: '0.08em', marginBottom: 6 }}>3つの物語を読み終えました</div>
                 <div style={{ color: '#fff', fontSize: 15, fontWeight: 900, lineHeight: 1.45, marginBottom: 14 }}>あなたの組織に、変化のきっかけを。</div>
                 <button style={{ width: '100%', background: C.red, color: '#fff', border: '2.5px solid #fff', borderRadius: 6, padding: '14px', fontSize: 14, fontWeight: 900, cursor: 'pointer' }}>✉️ 無料相談を予約する</button>
               </div>
@@ -674,22 +682,22 @@ function StoryCard({ story, onClick, compact }) {
         }
         <div style={{ position: 'absolute', top: 0, left: 0, background: cs ? '#888' : story.color, color: '#fff', fontFamily: 'Bangers, cursive', fontSize: 18, lineHeight: 1, padding: '3px 8px', borderBottom: `2px solid #111`, borderRight: `2px solid #111` }}>{story.id}</div>
         {cs && (
-          <div style={{ position: 'absolute', top: 0, right: 0, background: '#111', color: '#fff', fontSize: 9, fontWeight: 900, padding: '4px 8px', letterSpacing: '0.08em' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, background: '#111', color: '#fff', fontSize: 14, fontWeight: 900, padding: '4px 8px', letterSpacing: '0.08em' }}>
             COMING SOON
           </div>
         )}
       </div>
       <div style={{ padding: compact ? '10px 10px 0' : '12px 14px 0' }}>
-        <div style={{ fontSize: 10, color: cs ? '#888' : story.color, fontWeight: 700, marginBottom: 4 }}>STORY {story.id}</div>
-        <h3 style={{ fontSize: compact ? 12 : 14, fontWeight: 900, lineHeight: 1.35, whiteSpace: 'pre-line', marginBottom: compact ? 4 : 6, color: cs ? '#555' : '#111' }}>{story.cardTitle}</h3>
-        {!compact && <div style={{ fontSize: 11, color: '#888', lineHeight: 1.55, marginBottom: 2 }}>{story.cardSub}</div>}
+        <div style={{ fontSize: 14, color: cs ? '#888' : story.color, fontWeight: 700, marginBottom: 4 }}>STORY {story.id}</div>
+        <h3 style={{ fontSize: compact ? 15 : 17, fontWeight: 900, lineHeight: 1.35, whiteSpace: 'pre-line', marginBottom: compact ? 4 : 6, color: cs ? '#555' : '#111' }}>{story.cardTitle}</h3>
+        {!compact && <div style={{ fontSize: 14, color: '#888', lineHeight: 1.55, marginBottom: 2 }}>{story.cardSub}</div>}
       </div>
       <div style={{ borderTop: `${bw} solid #111`, padding: '8px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: cs ? '#eee' : story.bgLight }}>
         {cs
-          ? <span style={{ fontSize: 11, fontWeight: 700, color: '#888' }}>🔒 公開準備中…</span>
+          ? <span style={{ fontSize: 14, fontWeight: 700, color: '#888' }}>🔒 公開準備中…</span>
           : <>
-              <span style={{ fontSize: 11, fontWeight: 700, color: story.color }}>マンガを読む</span>
-              <div style={{ width: 24, height: 24, borderRadius: '50%', background: story.color, border: '2px solid #111', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 900 }}>›</div>
+              <span style={{ fontSize: 14, fontWeight: 700, color: story.color }}>マンガを読む</span>
+              <div style={{ width: 24, height: 24, borderRadius: '50%', background: story.color, border: '2px solid #111', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 900 }}>›</div>
             </>
         }
       </div>
@@ -706,9 +714,9 @@ function SuccessSection({ onOpen }) {
     <section style={{ borderBottom: `3px solid ${C.black}` }}>
       <div className="pc-section-pad" style={{ background: C.black, padding: '24px 18px 20px', borderBottom: `2.5px solid ${C.black}` }}>
         <div className="pc-wrap">
-          <div style={{ color: C.cyan, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 02</div>
+          <div style={{ color: C.cyan, fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 02</div>
           <h2 className="pc-h2" style={{ color: '#fff', fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>マンガで見る、成功例</h2>
-          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, lineHeight: 1.6, marginTop: 8 }}>設計されたイベントが、組織をどう変えたか。3つの実話。</div>
+          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, lineHeight: 1.6, marginTop: 8 }}>設計されたイベントが、組織をどう変えたか。3つの実話。</div>
         </div>
       </div>
 
@@ -747,7 +755,7 @@ function KnowhowSection() {
     <section style={{ background: '#fafaf8', borderBottom: `3px solid ${C.black}` }}>
       <div className="pc-section-pad" style={{ background: C.yellow, borderBottom: `2.5px solid ${C.black}`, padding: '22px 18px 18px' }}>
         <div className="pc-wrap">
-          <div style={{ color: C.black, fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 03</div>
+          <div style={{ color: C.black, fontSize: 14, fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>CHAPTER 03</div>
           <h2 className="pc-h2" style={{ color: C.black, fontSize: 20, fontWeight: 900, lineHeight: 1.35 }}>成功へのノウハウ・3つのポイント</h2>
         </div>
       </div>
@@ -759,16 +767,16 @@ function KnowhowSection() {
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
                 <span style={{ fontFamily: 'Bangers, cursive', fontSize: 18, color: k.color }}>{k.num}</span>
-                <h3 style={{ fontSize: 14, fontWeight: 900, color: C.black, display: 'inline', margin: 0 }}>{k.title}</h3>
+                <h3 style={{ fontSize: 15, fontWeight: 900, color: C.black, display: 'inline', margin: 0 }}>{k.title}</h3>
               </div>
-              <div style={{ fontSize: 12, lineHeight: 1.75, color: '#444' }}>{k.desc}</div>
+              <div style={{ fontSize: 14, lineHeight: 1.75, color: '#444' }}>{k.desc}</div>
             </div>
           </div>
         )}
       </div>
 
       <div style={{ padding: '0 14px 16px', maxWidth: 1120, margin: '0 auto' }}>
-        <p className="pc-body" style={{ fontSize: 12, lineHeight: 1.85, color: '#444', textWrap: 'pretty' }}>
+        <p className="pc-body" style={{ fontSize: 14, lineHeight: 1.85, color: '#444', textWrap: 'pretty' }}>
           3点あります。①目的を先に設計する：何を変えたいかから逆算する。②「体験」で関係をつくる：講演ではなく共体験で心理的距離を縮める。③余韻を設計に組み込む：イベント後の行動変容まで見越す。
         </p>
       </div>
@@ -777,7 +785,7 @@ function KnowhowSection() {
       <div style={{ margin: '0 14px 20px', maxWidth: 1120, marginLeft: 14, marginRight: 14, border: `2.5px solid ${C.black}`, borderRadius: 8, overflow: 'hidden', background: '#fff' }} className="pc-video-box">
         <div style={{ background: C.black, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 18 }}>🎬</span>
-          <span style={{ color: '#fff', fontSize: 12, fontWeight: 900 }}>動画で見る：設計されたイベントの現場</span>
+          <span style={{ color: '#fff', fontSize: 14, fontWeight: 900 }}>動画で見る：設計されたイベントの現場</span>
         </div>
         <div
           onClick={() => setVideoVisible(!videoVisible)}
@@ -787,17 +795,17 @@ function KnowhowSection() {
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: C.red, border: `3px solid ${C.black}`, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: '3px 3px 0 #111' }}>
             <span style={{ fontSize: 24, marginLeft: 4 }}>▶</span>
           </div>
-          <div style={{ zIndex: 1, fontSize: 11, fontWeight: 700, color: '#555' }}>
+          <div style={{ zIndex: 1, fontSize: 14, fontWeight: 700, color: '#555' }}>
             {videoVisible ? '▲ 動画を閉じる' : '再生する（約3分）'}
           </div>
         </div>
         {videoVisible &&
-        <div style={{ background: '#111', color: 'rgba(255,255,255,0.5)', fontSize: 11, textAlign: 'center', padding: '20px 14px', lineHeight: 1.6 }}>
+        <div style={{ background: '#111', color: 'rgba(255,255,255,0.5)', fontSize: 14, textAlign: 'center', padding: '20px 14px', lineHeight: 1.6 }}>
             📹 ここに動画が埋め込まれます<br />
-            <span style={{ fontSize: 10 }}>（YouTubeまたはVimeoのiframe）</span>
+            <span style={{ fontSize: 14 }}>（YouTubeまたはVimeoのiframe）</span>
           </div>
         }
-        <div style={{ padding: '12px 14px', fontSize: 11, lineHeight: 1.6, color: '#555' }}>
+        <div style={{ padding: '12px 14px', fontSize: 14, lineHeight: 1.6, color: '#555' }}>
           実際の現場映像と、参加者の声。「変わった前と後」を自分の目で確かめてください。
         </div>
       </div>
@@ -817,12 +825,12 @@ function InvestmentSection() {
        <div>
         <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
           <img src="uploads/logo_02white.png" alt="COMET" style={{ height: 24, width: 'auto', display: 'block' }} />
-          <span style={{ color: C.yellow, fontSize: 10, fontWeight: 700, letterSpacing: '0.12em' }}>CHAPTER 04</span>
+          <span style={{ color: C.yellow, fontSize: 14, fontWeight: 700, letterSpacing: '0.12em' }}>CHAPTER 04</span>
         </div>
         <h2 style={{ color: '#fff', fontSize: 26, fontWeight: 900, lineHeight: 1.35, marginBottom: 16 }}>
           「社内イベント」は、<br /><span style={{ color: C.yellow }}>コストじゃなく、</span><br />投資だった。
         </h2>
-        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, lineHeight: 1.8, marginBottom: 28, textWrap: 'pretty' }}>
+        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 16, lineHeight: 1.8, marginBottom: 28, textWrap: 'pretty' }}>
           設計次第で投資になります。楽しいだけ・盛り上がるだけで終わらず、その後の働き方につながるイベント設計が、投資対効果を引き上げます。
         </div>
 
@@ -836,7 +844,7 @@ function InvestmentSection() {
           map((d) =>
           <div key={d.label} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 8, padding: '20px 12px', textAlign: 'center' }}>
               <div className="pc-stat-val" style={{ color: C.yellow, fontFamily: 'Bangers, cursive', fontSize: 28, lineHeight: 1 }}>{d.val}<span className="pc-stat-unit" style={{ fontSize: 16 }}>{d.unit}</span></div>
-              <div className="pc-stat-label" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 9, marginTop: 6, fontWeight: 700, lineHeight: 1.35 }}>{d.label}</div>
+              <div className="pc-stat-label" style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 6, fontWeight: 700, lineHeight: 1.35 }}>{d.label}</div>
             </div>
           )}
         </div>
@@ -854,9 +862,9 @@ function CTASection() {
       <div className="pc-wrap">
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <img src="uploads/logo_02.png" alt="COMET" style={{ height: 36, width: 'auto', display: 'block', margin: '0 auto 8px' }} />
-          <div style={{ fontSize: 11, color: '#888', fontWeight: 700 }}>社内イベントで組織を変える</div>
+          <div style={{ fontSize: 14, color: '#888', fontWeight: 700 }}>社内イベントで組織を変える</div>
         </div>
-        <p className="pc-body" style={{ fontSize: 13, lineHeight: 1.85, color: '#333', marginBottom: 28, textWrap: 'pretty', textAlign: 'center' }}>
+        <p className="pc-body" style={{ fontSize: 16, lineHeight: 1.85, color: '#333', marginBottom: 28, textWrap: 'pretty', textAlign: 'center' }}>
           10年・150社以上・300件以上の実績を持つ、社内イベント設計・運営の専門企業。経営方針発表会から懇親会まで、目的別に最適なイベントを設計します。無料相談から対応可能です。<br />
           まずは、あなたの組織の課題を教えてください。<br />
           30分の無料相談から、変化ははじまります。
@@ -891,18 +899,18 @@ function Hero() {
       <div style={{ position: 'absolute', bottom: -60, left: -30, width: 160, height: 160, background: t.c2, borderRadius: '50%', opacity: 0.1 }} />
       <div className="pc-hero-grid" style={{ position: 'relative', zIndex: 1 }}>
         <div>
-          <div style={{ color: t.accent, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', marginBottom: 14, opacity: 0.7 }}>COMET × ORGANIZATION DESIGN</div>
+          <div className="pc-hero-subbrand" style={{ color: t.accent, fontSize: 14, fontWeight: 700, letterSpacing: '0.12em', marginBottom: 14, opacity: 0.7 }}>COMET × ORGANIZATION DESIGN</div>
           <h1 className="pc-h1" style={{ color: t.title, fontSize: 27, fontWeight: 900, lineHeight: 1.3, marginBottom: 12 }}>
             社内イベントは、<br /><span style={{ color: t.accent }}>「設計」で変わる。</span>
           </h1>
-          <div style={{ color: t.accent, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 14, opacity: 0.8 }}>〜 3つの実話マンガで知る、組織を一つにするイベントの力 〜</div>
-          <p className="pc-body" style={{ color: t.sub, fontSize: 13, lineHeight: 1.85, marginBottom: 24, textWrap: 'pretty' }}>
+          <div className="pc-hero-tagline" style={{ color: t.accent, fontSize: 15, fontWeight: 700, letterSpacing: '0.06em', marginBottom: 14, opacity: 0.8 }}>〜 3つの実話マンガで知る、組織を一つにするイベントの力 〜</div>
+          <p className="pc-body" style={{ color: t.sub, fontSize: 16, lineHeight: 1.85, marginBottom: 24, textWrap: 'pretty' }}>
             形だけの行事で終わらせない。<br />
             成功する組織には、社員を動かす緻密な「設計図」があります。<br />
             実話に基づく3つの組織変革ストーリーを、まずはマンガで。<br />
             あなたの組織を劇的に変えるヒントが、ここにあります。
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: t.badgeBg, color: t.badgeText, fontSize: 12, fontWeight: 700, padding: '9px 18px', borderRadius: 100 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: t.badgeBg, color: t.badgeText, fontSize: 14, fontWeight: 700, padding: '9px 18px', borderRadius: 100 }}>
             📖 マンガで読む・3分で分かる
           </div>
         </div>
