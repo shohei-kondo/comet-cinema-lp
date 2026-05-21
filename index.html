@@ -340,6 +340,10 @@ const TweaksCtx = createContext(CONFIG);
 /** 問い合わせ・無料面談（LPの主導線） */
 const JICOO_BOOKING_URL = 'https://www.jicoo.com/t/yoyaku0518/e/mangalp';
 
+/** ノウハウ動画（Vimeo） */
+const VIMEO_VIDEO_SHORT_ID = '1193875748';
+const VIMEO_VIDEO_FULL_URL = 'https://vimeo.com/1163987139';
+
 function FailureSection() {
   return (
     <section style={{ borderBottom: `3px solid ${C.black}` }}>
@@ -826,38 +830,60 @@ function KnowhowSection() {
         )}
       </div>
 
-      <div style={{ padding: '0 14px 16px', maxWidth: 1120, margin: '0 auto' }}>
-        <p className="pc-body" style={{ fontSize: 14, lineHeight: 1.85, color: '#303030', textWrap: 'pretty' }}>
-          3点あります。①目的を先に設計する：何を変えたいかから逆算する。②「体験」で関係をつくる：講演ではなく共体験で心理的距離を縮める。③余韻を設計に組み込む：イベント後の行動変容まで見越す。
-        </p>
-      </div>
-
       {/* 動画リンク */}
       <div style={{ margin: '0 14px 20px', maxWidth: 1120, marginLeft: 14, marginRight: 14, border: `2.5px solid ${C.black}`, borderRadius: 8, overflow: 'hidden', background: '#fff' }} className="pc-video-box">
         <div style={{ background: C.black, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 18 }}>🎬</span>
-          <span style={{ color: '#fff', fontSize: 14, fontWeight: 900 }}>動画で見る：設計されたイベントの現場</span>
+          <span style={{ color: '#fff', fontSize: 14, fontWeight: 900 }}>動画で見る：「やって終わる」社内イベントと「組織が動く」社内イベント</span>
         </div>
+        {!videoVisible ?
         <div
-          onClick={() => setVideoVisible(!videoVisible)}
+          onClick={() => setVideoVisible(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setVideoVisible(true); } }}
           style={{ position: 'relative', background: '#e8e8e8', height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexDirection: 'column', gap: 8 }}>
-          {/* thumbnail placeholder */}
           <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 11px)' }} />
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: C.red, border: `3px solid ${C.black}`, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: '3px 3px 0 #111' }}>
             <span style={{ fontSize: 24, marginLeft: 4 }}>▶</span>
           </div>
           <div style={{ zIndex: 1, fontSize: 14, fontWeight: 700, color: '#3a3a3a' }}>
-            {videoVisible ? '▲ 動画を閉じる' : '再生する（約3分）'}
+            ダイジェストを再生する（約3分）
           </div>
+        </div> :
+
+        <div>
+          <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', background: '#111' }}>
+            <iframe
+              src={`https://player.vimeo.com/video/${VIMEO_VIDEO_SHORT_ID}?title=0&byline=0&portrait=0`}
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+              allowFullScreen
+              title="「やって終わる」と「組織が動く」社内イベント（ダイジェスト）"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setVideoVisible(false)}
+            style={{ width: '100%', border: 'none', borderTop: `2px solid ${C.black}`, background: '#e8e8e8', padding: '10px 14px', fontSize: 14, fontWeight: 700, color: '#3a3a3a', cursor: 'pointer' }}>
+            ▲ 動画を閉じる
+          </button>
         </div>
-        {videoVisible &&
-        <div style={{ background: '#111', color: 'rgba(255,255,255,0.82)', fontSize: 14, textAlign: 'center', padding: '20px 14px', lineHeight: 1.6 }}>
-            📹 ここに動画が埋め込まれます<br />
-            <span style={{ fontSize: 14 }}>（YouTubeまたはVimeoのiframe）</span>
-          </div>
         }
-        <div style={{ padding: '12px 14px', fontSize: 14, lineHeight: 1.6, color: '#3a3a3a' }}>
-          実際の現場映像と、参加者の声。「変わった前と後」を自分の目で確かめてください。
+        <div style={{ padding: '12px 14px', fontSize: 14, lineHeight: 1.65, color: '#3a3a3a' }}>
+          <p style={{ margin: '0 0 8px' }}>
+            約30分のフル尺から、見どころを約3分にまとめた動画です。
+          </p>
+          <p style={{ margin: '0 0 12px' }}>
+            実際の現場映像と、参加者の声。「変わった前と後」を自分の目で確かめてください。
+          </p>
+          <a
+            href={VIMEO_VIDEO_FULL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#0d5a87', fontWeight: 900, textDecoration: 'underline', textUnderlineOffset: 3 }}>
+            フル尺版を見る（約30分・Vimeo） →
+          </a>
         </div>
       </div>
     </section>);
