@@ -971,6 +971,44 @@ function CTASection() {
 
 }
 
+function FooterSection() {
+  return (
+    <footer style={{ background: C.black, color: '#fff', borderTop: `3px solid ${C.black}`, padding: '28px 20px 24px' }}>
+      <div className="pc-wrap" style={{ display: 'grid', gap: 18 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 18 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+            <img src="uploads/logo_02white.png" alt="株式会社COMET" style={{ height: 26, width: 'auto', display: 'block', flexShrink: 0 }} />
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.12em', color: C.yellow, marginBottom: 4 }}>
+                OPERATED BY
+              </div>
+              <a
+                href="https://comet-event.co.jp/about/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#fff', textDecoration: 'none', fontSize: 15, fontWeight: 900, lineHeight: 1.45 }}>
+                運営会社：株式会社COMET
+              </a>
+            </div>
+          </div>
+          <a
+            href="https://comet-event.co.jp/about/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#fff', textDecoration: 'none', border: '2px solid rgba(255,255,255,0.85)', borderRadius: 999, padding: '9px 14px', fontSize: 13, fontWeight: 900, boxShadow: '3px 3px 0 rgba(255,255,255,0.18)' }}>
+            会社概要を見る
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.18)', paddingTop: 14, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 8, color: 'rgba(255,255,255,0.66)', fontSize: 12, lineHeight: 1.7 }}>
+          <span>社内イベントを、組織を動かす設計へ。</span>
+          <span>© 2026 名古屋のイベント業なら株式会社COMET ALL RIGHTS RESERVED.</span>
+        </div>
+      </div>
+    </footer>);
+
+}
+
 /* ════════════════════════════════════════
    HERO
 ════════════════════════════════════════ */
@@ -1028,6 +1066,7 @@ function App() {
       <KnowhowSection />
       <InvestmentSection />
       <CTASection />
+      <FooterSection />
 
       {openStory &&
       <StoryModal
